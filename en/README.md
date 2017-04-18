@@ -1,3 +1,4 @@
+
 ##1. Introduction
 This document is used to illustrate how to make a QR code for E-invoice with trading parameters, customers can scan the E-invoice QR code to request an online invoice.
 
