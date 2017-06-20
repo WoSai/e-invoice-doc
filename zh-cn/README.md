@@ -108,20 +108,20 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 - 请求参数说明：
 
 
-|名称|必填|类型|含义|备注|
+|名称|类型|含义|必填|备注|
 |----|:--:|:---|:---|--------|
-|code|Y|varchar(10)|成功与否标识|SUCCESS / FAIL|
-|message|Y|varchar(100)|结果描述|开票失败时为错误描述|
-|biz_no|Y|varchar(32)|开票交易流水号|开票的交易流水号|
-|original_no|N|varchar(32)|原始交易流水号|开红票时必传|
-|timestamp|Y|varchar(10)|通知时间|以秒为单位的时间戳|
-|einv_code|N|varchar(20)|发票代码|开票成功必传|
-|einv_no|N|varchar(20)|发票编号|开票成功必传|
-|check_code|N|varchar(50)|发票校验码|开票成功必传|
-|title_name|N|varchar(80)|发票抬头名称|开票成功必传|
-|user_mobile|N|varchar(16)|购买方电话||
-|user_register_no|N|varchar(20)|购买方纳税人识别号||
-|expand|N|varchar(100)|扩展字段|原样返回申请电子发票接口传的参数|
+|code|varchar(10)|成功与否标识|Y|SUCCESS / FAIL|
+|message|varchar(100)|结果描述|Y|开票失败时为错误描述|
+|biz_no|varchar(32)|开票交易流水号|Y|开票的交易流水号|
+|original_no|varchar(32)|原始交易流水号|N|开红票时必传|
+|timestamp|varchar(10)|通知时间|Y|以秒为单位的时间戳|
+|einv_code|varchar(20)|发票代码|N|开票成功必传|
+|einv_no|varchar(20)|发票编号|N|开票成功必传|
+|check_code|varchar(50)|发票校验码|N|开票成功必传|
+|title_name|varchar(80)|发票抬头名称|N|开票成功必传|
+|user_mobile|varchar(16)|购买方电话|N||
+|user_register_no|varchar(20)|购买方纳税人识别号|N||
+|expand|varchar(100)|扩展字段|N|原样返回申请电子发票接口传的参数|
 
 - 参数示例：
 
