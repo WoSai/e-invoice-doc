@@ -87,13 +87,14 @@
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |id|商品唯一标识|varchar(10)|Y|本次交易内唯一，退货时，退货商品的id需要对应该id|
-|name|发票项目名称或商品名称|varchar(20)|Y||
+|tax_no|商品税务映射编号|varchar(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
+|name|发票项目名称或商品名称|varchar(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
 |num|商品数量|int|N|折扣行参数不能填，非折扣行必填|
 |item_amount|单项商品总价|int|Y|单位为分|
 
 
  - 参数示例：
-https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=[{"id":"1","name":"品类一","num":"1","item_amount":"11200"},{"id":"2","name":"品类二","num":"1","item_amount":"11200"},{"id":"3","name":"品类三","num":"1","item_amount":"11200"},{"id":"4","name":"品类四","num":"1","item_amount":"11200"}]
+https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=[{"id":"1",”tax_no”:”2”,"name":"品类一","num":"1","item_amount":"11200"},{"id”:”2”,”tax_no”:”2”,”name":"品类二","num":"1","item_amount":"11200"}]
 
  - 返回说明：返回网页交互界面，用户在此交互界面确认订单信息和填写抬头。
 
