@@ -78,6 +78,7 @@
 |biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
 |amount|交易总金额|int|Y|单位为分|
 |items|开票商品明细信息|[]|N|参考开票明细信息|
+|expand|N|varchar(100)|扩展字段|调用通知接口时，该参数会原样返回|
 |sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
 
 
@@ -120,7 +121,7 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 |title_name|N|varchar(80)|发票抬头名称|开票成功必传|
 |user_mobile|N|varchar(16)|购买方电话||
 |user_register_no|N|varchar(20)|购买方纳税人识别号||
-|expand|N|varchar(100)|扩展字段|预留字段|
+|expand|N|varchar(100)|扩展字段|原样返回申请电子发票接口传的参数|
 
 - 参数示例：
 
