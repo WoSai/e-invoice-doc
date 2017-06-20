@@ -18,7 +18,7 @@
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |appid|ISV分配给商户唯一标识|varchar(20)|Y||
-|sign|参数签名|varchar|Y|详见2.2.如何构造签名|
+|sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
 
 
  - 参数示例：
@@ -26,7 +26,7 @@
 ```javascript
 {
     "appid":"2200000001",
-    "sign":"MDYCGQCNTJhYa4JghYuksPMsE8jO33sq"
+    "sign":"MDYCGQCNTJHYA4JGHYUKSPMSE8JO33SQ"
 }
 ```
 
@@ -36,7 +36,7 @@
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |code|响应消息代码|varchar(6)|Y|200为成功，其它为异常|
-|message|错误消息提示|varchar(6)|N|code为非200时返回|
+|message|错误消息提示|varchar(100)|N|code为非200时返回|
 |data|新的密钥|varchar(32)|N|code为200时返回|
 
 
@@ -46,18 +46,18 @@
 ```javascript
 {
     "code":"200",
-    "data":"34719280830192"
+    "data":"9B6210772044610030068CDF2DCE35F3"
 }
 ```
 
 ###2.2 如何构造签名
     签名是在进行接口调用或者参数输出生成二维码的过程中，利用密钥和参数进行MD5签名的过程，具体流程如下：
  - 签名说明：
-接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、channel、biz\_time、biz\_no等5个参数，并且密钥secret=34719280830192，参数中appid=2200000001，biz\_time=1468780992，channel=alipay，store\_sn=5308，biz\_no=61028309128301298，则签名步骤如下：
+接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、biz\_time、biz\_no、items等5个参数（其中items是数据类型），并且密钥secret=9B6210772044610030068CDF2DCE35F3，参数中appid=2200000001，store\_sn=5308，biz\_time=1468780992，biz\_no=61028309128301298，items=[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]，则签名步骤如下：
 ```
-第一步：参数及密钥拼装成6个元素存入到数组array=['2200000001=appId','1468780992=biz_time','alipay=channel','61028309128301298=biz_no','5308=store_sn','34719280830192=secret']；
-第二步：对array数组进行排序得到sortArray=['1468780992=biz_time','2200000001=appid','34719280830192=secret','5308=store_sn','61028309128301298=biz_no','alipay=channel']；
-第三步：使用连接符‘&’对数组进行拼接，得到字符串source='1468780992=biz_time&2200000001=appId&34719280830192=secret&5308=store_sn&61028309128301298=biz_no&alipay=channel'；
+第一步：参数及密钥拼装成9个元素存入到数组array= [5308=store_sn, 61028309128301298=biz_no, 2200000001=appid, 1468780992=biz_time, 1002=id[1], 9B6210772044610030068CDF2DCE35F3=secret, 1001=id[0], 商品二=name[1], 商品一=name[0]]；
+第二步：对array数组进行排序得到sortArray= [1001=id[0], 1002=id[1], 1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, 商品一=name[0], 商品二=name[1]]；
+第三步：使用连接符‘&’对数组进行拼接，得到字符串source="1001=id[0]&1002=id[1]&1468780992=biz_time&2200000001=appid&5308=store_sn&61028309128301298=biz_no&9B6210772044610030068CDF2DCE35F3=secret&商品一=name[0]&商品二=name[1]"；
 第四步：对source进行‘md5’32位大写加密，得到sign=Upper(MD5(source))；
 ```
 
@@ -95,3 +95,55 @@
 https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=[{"id":"1","name":"品类一","num":"1","item_amount":"11200"},{"id":"2","name":"品类二","num":"1","item_amount":"11200"},{"id":"3","name":"品类三","num":"1","item_amount":"11200"},{"id":"4","name":"品类四","num":"1","item_amount":"11200"}]
 
  - 返回说明：返回网页交互界面，用户在此交互界面确认订单信息和填写抬头。
+
+
+###3.2 开票结果通知接口
+    开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回SUCCESS或通知8次为止。
+
+- 接口地址：商户提供
+- 访问方式：post
+- 请求参数说明：
+
+
+|名称|必填|类型|含义|备注|
+|----|:--:|:---|:---|--------|
+|code|Y|varchar(10)|成功与否标识|SUCCESS / FAIL|
+|message|Y|varchar(100)|结果描述|开票失败时为错误描述|
+|biz_no|Y|varchar(32)|开票交易流水号|开票的交易流水号|
+|original_no|N|varchar(32)|原始交易流水号|开红票时必传|
+|timestamp|Y|varchar(10)|通知时间|以秒为单位的时间戳|
+|einv_code|N|varchar(20)|发票代码|开票成功必传|
+|einv_no|N|varchar(20)|发票编号|开票成功必传|
+|check_code|N|varchar(50)|发票校验码|开票成功必传|
+|title_name|N|varchar(80)|发票抬头名称|开票成功必传|
+|user_mobile|N|varchar(16)|购买方电话||
+|user_register_no|N|varchar(20)|购买方纳税人识别号||
+|expand|N|varchar(100)|扩展字段|预留字段|
+
+- 参数示例：
+
+```javascript
+{
+    "code": "SUCCESS",
+    "message": "开票成功",
+    "biz_no": "22000000012",
+    "timestamp": "1488262167",
+    "einv_code": "150003528888",
+    "einv_no": "50877603",
+    "check_code": "59669422713395768932",
+    "title_name": "发票抬头",
+    "user_mobile": "18268888888",
+    "user_register_no": "9133010060913454XP"
+}
+
+```
+
+- 返回说明：
+
+ 商户收到通知后应返回字符串 SUCCESS ，收钱吧如果未收到SUCCESS，会重试8次推送通知。
+
+- 返回示例：
+
+```javascript
+	SUCCESS 
+```
