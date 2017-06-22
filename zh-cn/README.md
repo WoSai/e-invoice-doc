@@ -78,7 +78,7 @@
 |biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
 |amount|交易总金额|int|Y|单位为分|
 |items|开票商品明细信息|[]|N|参考开票明细信息|
-|expand|N|varchar(100)|扩展字段|调用通知接口时，该参数会原样返回|
+|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
 |sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
 
 
@@ -110,10 +110,11 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 - 请求参数说明：
 
 
-|名称|类型|含义|必填|备注|
-|----|:--:|:---|:---|--------|
-|biz_no|varchar(32)|交易流水号|Y|交易流水号|
-|sign|varchar(32)|参数签名|Y|参数签名验证|
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|biz_no|交易流水号|varchar(32)|Y|交易流水号|
+|sign|参数签名|varchar(32)|Y|参数签名验证|
+|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
 
 
 - 参数示例：
@@ -127,16 +128,17 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 
 - 返回参数：
 
-|名称|类型|含义|必填|备注|
-|----|:--:|:---|:---|--------|
-|biz_no|varchar(32)|交易流水号|Y|交易流水号|
-|original_no|varchar(32)|原始交易流水号|N|原始交易流水号，订单退款时必返回|
-|store_sn|varchar(20)|交易门店编号|Y|商户门店唯一标识|
-|biz_time|varchar(10)|交易时间|Y|以秒为单位的时间戳|
-|amount|int|交易总金额|Y|单位为分|
-|type|varchar(2)|交易类型|Y|P-付款；R-退款|
-|items|[]|交易商品明细|N|参考交易商品明细|
-|remark|varchar(256)|备注|N| |
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|biz_no|交易流水号|varchar(32)|Y|交易流水号|
+|original_no|原始交易流水号|varchar(32)|N|原始交易流水号，订单退款时必返回|
+|store_sn|交易门店编号|varchar(20)|Y|商户门店唯一标识|
+|biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
+|amount|交易总金额|int|Y|单位为分|
+|type|交易类型|varchar(2)|Y|P-付款；R-退款|
+|items|交易商品明细|[]|N|参考交易商品明细|
+|remark|备注|varchar(256)|N| |
+|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
 
 - 交易商品明细
 
@@ -202,20 +204,20 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 - 请求参数说明：
 
 
-|名称|类型|含义|必填|备注|
-|----|:--:|:---|:---|--------|
-|code|varchar(10)|成功与否标识|Y|SUCCESS / FAIL|
-|message|varchar(100)|结果描述|Y|开票失败时为错误描述|
-|biz_no|varchar(32)|开票交易流水号|Y|开票的交易流水号|
-|original_no|varchar(32)|原始交易流水号|N|开红票时必传|
-|timestamp|varchar(10)|通知时间|Y|以秒为单位的时间戳|
-|einv_code|varchar(20)|发票代码|N|开票成功必传|
-|einv_no|varchar(20)|发票编号|N|开票成功必传|
-|check_code|varchar(50)|发票校验码|N|开票成功必传|
-|title_name|varchar(80)|发票抬头名称|N|开票成功必传|
-|user_mobile|varchar(16)|购买方电话|N| |
-|user_register_no|varchar(20)|购买方纳税人识别号|N| |
-|expand|varchar(100)|扩展字段|N|原样返回申请电子发票接口传的参数|
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|code|成功与否标识|varchar(10)|Y|SUCCESS / FAIL|
+|message|结果描述|varchar(100)|Y|开票失败时为错误描述|
+|biz_no|开票交易流水号|varchar(32)|Y|开票的交易流水号|
+|original_no|原始交易流水号|varchar(32)|N|开红票时必传|
+|timestamp|通知时间|varchar(10)|Y|以秒为单位的时间戳|
+|einv_code|发票代码|varchar(20)|N|开票成功必传|
+|einv_no|发票编号|varchar(20)|N|开票成功必传|
+|check_code|发票校验码|varchar(50)|N|开票成功必传|
+|title_name|发票抬头名称|varchar(80)|N|开票成功必传|
+|user_mobile|购买方电话|varchar(16)|N| |
+|user_register_no|购买方纳税人识别号|varchar(20)|N| |
+|expand|扩展字段|varchar(100)|N|原样返回申请电子发票接口传的参数|
 
 - 参数示例：
 
