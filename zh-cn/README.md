@@ -18,7 +18,7 @@
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|appid|ISV分配给商户唯一标识|varchar(20)|Y||
+|appid|ISV分配给商户唯一标识|varchar(20)|Y| |
 |sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
 
 
@@ -70,11 +70,11 @@
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|appid|ISV分配给商户唯一标识|varchar(20)|Y||
+|appid|ISV分配给商户唯一标识|varchar(20)|Y| |
 |channel|支付渠道|varchar(10)|N|cash/bank/alipay,用于发票归集|
 |payer|用户支付渠道的唯一标识|varchar(10)|N|用于发票归集|
-|store_sn|商户门店唯一标识|varchar(20)|Y||
-|biz_no|交易流水号|varchar(32)|Y||
+|store_sn|商户门店唯一标识|varchar(20)|Y| |
+|biz_no|交易流水号|varchar(32)|Y| |
 |biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
 |amount|交易总金额|int|Y|单位为分|
 |items|开票商品明细信息|[]|N|参考开票明细信息|
@@ -136,16 +136,16 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 |amount|int|交易总金额|Y|单位为分|
 |type|varchar(2)|交易类型|Y|P-付款；R-退款|
 |items|[]|交易商品明细|N|参考交易商品明细|
-|remark|varchar(256)|备注|N||
+|remark|varchar(256)|备注|N| |
 
 - 交易商品明细
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|id|商品唯一标识|varchar(10)|Y||
+|id|商品唯一标识|varchar(10)|Y| |
 |tax_no|商品税务映射编号|varchar(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
 |name|发票项目名称或商品名称|varchar(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
-|num|商品数量|int|N||
+|num|商品数量|int|N| |
 |item_amount|单项商品总价|int|Y|单位为分|
 
 - 返回示例：
@@ -213,8 +213,8 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 |einv_no|varchar(20)|发票编号|N|开票成功必传|
 |check_code|varchar(50)|发票校验码|N|开票成功必传|
 |title_name|varchar(80)|发票抬头名称|N|开票成功必传|
-|user_mobile|varchar(16)|购买方电话|N||
-|user_register_no|varchar(20)|购买方纳税人识别号|N||
+|user_mobile|varchar(16)|购买方电话|N| |
+|user_register_no|varchar(20)|购买方纳税人识别号|N| |
 |expand|varchar(100)|扩展字段|N|原样返回申请电子发票接口传的参数|
 
 - 参数示例：
