@@ -54,11 +54,11 @@
 ###2.2 如何构造签名
     签名是在进行接口调用或者参数输出生成二维码的过程中，利用密钥和参数进行MD5签名的过程，具体流程如下：
  - 签名说明：
-接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、biz\_time、biz\_no、items等5个参数（其中items是数据类型），并且密钥secret=9B6210772044610030068CDF2DCE35F3，参数中appid=2200000001，store\_sn=5308，biz\_time=1468780992，biz\_no=61028309128301298，items=[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]，则签名步骤如下：
+接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、biz\_time、biz\_no、items等5个参数（其中items是数组类型），并且密钥secret=9B6210772044610030068CDF2DCE35F3，参数中appid=2200000001，store\_sn=5308，biz\_time=1468780992，biz\_no=61028309128301298，items=[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]，则签名步骤如下：
 ```
-第一步：参数及密钥拼装成9个元素存入到数组array= [5308=store_sn, 61028309128301298=biz_no, 2200000001=appid, 1468780992=biz_time, 1002=id[1], 9B6210772044610030068CDF2DCE35F3=secret, 1001=id[0], 商品二=name[1], 商品一=name[0]]；
-第二步：对array数组进行排序得到sortArray= [1001=id[0], 1002=id[1], 1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, 商品一=name[0], 商品二=name[1]]；
-第三步：使用连接符‘&’对数组进行拼接，得到字符串source="1001=id[0]&1002=id[1]&1468780992=biz_time&2200000001=appid&5308=store_sn&61028309128301298=biz_no&9B6210772044610030068CDF2DCE35F3=secret&商品一=name[0]&商品二=name[1]"；
+第一步：参数及密钥拼装成6个元素存入到数组array=[5308=store_sn, 61028309128301298=biz_no, 2200000001=appid, 1468780992=biz_time, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
+第二步：对array数组进行排序得到sortArray=[1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
+第三步：使用连接符‘&’对数组进行拼接，得到字符串source='1468780992=biz_time&2200000001=appid&5308=store_sn&61028309128301298=biz_no&9B6210772044610030068CDF2DCE35F3=secret&[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items'；
 第四步：对source进行‘md5’32位大写加密，得到sign=Upper(MD5(source))；
 ```
 
@@ -95,7 +95,7 @@
 
 
  - 参数示例：
-https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=[{"id":"1",”tax_no”:”2”,"name":"品类一","num":"1","item_amount":"11200"},{"id”:”2”,”tax_no”:”2”,”name":"品类二","num":"1","item_amount":"11200"}]
+https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=%5B%7B%22id%22%3A%221%22%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%22name%22%3A%22%E5%93%81%E7%B1%BB%E4%B8%80%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dname%22%3A%22%E5%93%81%E7%B1%BB%E4%BA%8C%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%5D
 
  - 返回说明：返回网页交互界面，用户在此交互界面确认订单信息和填写抬头。
 

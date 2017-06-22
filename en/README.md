@@ -90,6 +90,6 @@ Step 4：using MD5 to get a signature, and make the signature combined with capi
 
 
  - example：
-https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=[{"id":"1","name":"item1","num":"1","item_amount":"11200"},{"id":"2","name":"item2","num":"1","item_amount":"11200"},{"id":"3","name":"item3","num":"1","item_amount":"11200"},{"id":"4","name":"item4","num":"1","item_amount":"11200"}]
+https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=%5B%7B%22id%22%3A%221%22%2C%22name%22%3A%22item1%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%22%3A%222%22%2C%22name%22%3A%22item2%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%22%3A%223%22%2C%22name%22%3A%22item3%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%22%3A%224%22%2C%22name%22%3A%22item4%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%5D
 
  - return desc：This url can lead customers to a Web page, customers can input invoice informations in this Web page。
