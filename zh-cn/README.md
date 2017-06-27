@@ -5,7 +5,7 @@
 要实现二维码生成，商户需要完成以下流程：
  > * 第一步：商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
  > * 第二步：基于第一步向ISV申请appid和密钥secret。注：为确保访问安全，商户应定期更新密钥；
- > * 第三步：在交易发生时基于<3.1申请电子发票>接口构建发票申请http网页地址，再基于此http地址生成二维码打印在收银票据上。
+ > * 第三步：在交易发生时基于<3.1申请电子发票>接口构建发票申请http网页地址，再基于此http地址生成二维码打印在收银票据上；
  > * 第四步：开发接收通知的接口，订阅收钱吧推送的开票结果信息。
 
 ##2.通用说明
@@ -57,15 +57,23 @@
 接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、biz\_time、biz\_no、items等5个参数（其中items是数组类型），并且密钥secret=9B6210772044610030068CDF2DCE35F3，参数中appid=2200000001，store\_sn=5308，biz\_time=1468780992，biz\_no=61028309128301298，items=[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]，则签名步骤如下：
 ```
 第一步：参数及密钥拼装成6个元素存入到数组array=[5308=store_sn, 61028309128301298=biz_no, 2200000001=appid, 1468780992=biz_time, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
-第二步：对array数组进行排序得到sortArray=[1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
+第二步：对array数组使用Arrays.sort()进行升序排序得到sortArray=[1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
 第三步：使用连接符‘&’对数组进行拼接，得到字符串source='1468780992=biz_time&2200000001=appid&5308=store_sn&61028309128301298=biz_no&9B6210772044610030068CDF2DCE35F3=secret&[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items'；
-第四步：对source进行‘md5’32位大写加密，得到sign=Upper(MD5(source))；
+第四步：对source进行‘md5’32位大写加密，得到sign=Upper(MD5(source)) 。
 ```
+
+###2.3 接口调用相关说明
+ - 所有请求的body都需采用UTF-8编码，所有响应也会采用相同编码。
+ - 所有post方式请求的接口，请求和返回参数都为JSON格式，请在HTTP请求头中加入Content-Type: application/json。
+ - 所有返回数据的类型都是字符串。
+
 
 ##3 发票
 ###3.1 申请电子发票
  - 接口地址：https://m.wosai.cn/api/invoice/apply/v1
  - 访问方式：get
+ - Content Type：application/json
+ - Content Encoding: utf-8
  - 参数说明：
 
 |名称|含义|类型|必填|备注|
@@ -80,6 +88,8 @@
 |items|开票商品明细信息|[]|N|参考开票明细信息|
 |expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
 |sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
+|channel|支付通道|varchar(20)|N| |
+ - 请求响应的 Content Encoding: 这里需要注意的是，返回值的编码也应是 utf-8 的
 
 
  - 开票商品明细信息
@@ -154,7 +164,6 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 
 ```javascript
 {
-    "appid": "2200000001",
     "biz_no": "22000000012",
     "store_sn": "2200000011",
     "biz_time": "1488262165",
