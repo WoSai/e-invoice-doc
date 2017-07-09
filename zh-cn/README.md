@@ -1,5 +1,8 @@
+## 前提
+所有的请求和响应 必须都使用 utf-8 字符编码
+协议使用  https
 
-##1.接入说明
+## 1.接入说明
 本文档用于说明商户如何通过交易参数输出来生成电子发票二维码，客户可以通过扫描商户生成的电子发票二维码来实现在线开票的功能。
 
 要实现二维码生成，商户需要完成以下流程：
@@ -8,92 +11,75 @@
  > * 第三步：在交易发生时基于<3.1申请电子发票>接口构建发票申请http网页地址，再基于此http地址生成二维码打印在收银票据上；
  > * 第四步：开发接收通知的接口，订阅收钱吧推送的开票结果信息。
 
-##2.通用说明
+## 2.通用说明
 
-###2.1 签到
-    为了保证安全，由ISV提供给商户端的密钥应该定期更新，更新通过签到接口完成。
- - 接口地址：https://m.wosai.cn/api/sign/v1
- - 访问方式：post
- - 参数说明：
+### 2.1 如何构造签名
 
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|appid|ISV分配给商户唯一标识|varchar(20)|Y| |
-|sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
-
-
- - 参数示例：
- 
-```javascript
-{
-    "appid":"2200000001",
-    "sign":"MDYCGQCNTJHYA4JGHYUKSPMSE8JO33SQ"
-}
-```
-
-
- - 返回说明：
-
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|code|响应消息代码|varchar(6)|Y|200为成功，其它为异常|
-|message|错误消息提示|varchar(100)|N|code为非200时返回|
-|data|新的密钥|varchar(32)|N|code为200时返回|
-
-
-
- - 返回示例：
- 
-```javascript
-{
-    "code":"200",
-    "data":"9B6210772044610030068CDF2DCE35F3"
-}
-```
-
-###2.2 如何构造签名
-    签名是在进行接口调用或者参数输出生成二维码的过程中，利用密钥和参数进行MD5签名的过程，具体流程如下：
+签名是在进行接口调用或者参数输出生成二维码的过程中，利用密钥和参数进行MD5签名的过程，具体流程如下：
  - 签名说明：
-接口调用或者生成二维码所有传递的参数都需要一起进行签名，假设本次参数包括appid、store\_sn、biz\_time、biz\_no、items等5个参数（其中items是数组类型），并且密钥secret=9B6210772044610030068CDF2DCE35F3，参数中appid=2200000001，store\_sn=5308，biz\_time=1468780992，biz\_no=61028309128301298，items=[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]，则签名步骤如下：
-```
-第一步：参数及密钥拼装成6个元素存入到数组array=[5308=store_sn, 61028309128301298=biz_no, 2200000001=appid, 1468780992=biz_time, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
-第二步：对array数组使用Arrays.sort()进行升序排序得到sortArray=[1468780992=biz_time, 2200000001=appid, 5308=store_sn, 61028309128301298=biz_no, 9B6210772044610030068CDF2DCE35F3=secret, [{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items]；
-第三步：使用连接符‘&’对数组进行拼接，得到字符串source='1468780992=biz_time&2200000001=appid&5308=store_sn&61028309128301298=biz_no&9B6210772044610030068CDF2DCE35F3=secret&[{"id":"1001","name":"商品一"},{"id":"1002","name":"商品二"}]=items'；
-第四步：对source进行‘md5’32位大写加密，得到sign=Upper(MD5(source)) 。
-```
-
-###2.3 接口调用相关说明
- - 所有请求的body都需采用UTF-8编码，所有响应也会采用相同编码。
- - 所有post方式请求的接口，请求和返回参数都为JSON格式，请在HTTP请求头中加入Content-Type: application/json。
- - 所有返回数据的类型都是字符串。
-
-
-##3 发票
-###3.1 申请电子发票
- - 接口地址：https://m.wosai.cn/api/invoice/apply/v1
- - 访问方式：get
- - Content Type：application/json
- - Content Encoding: utf-8
- - 参数说明：
+   1. appid 就是构造签名的  sn， 而 给予的 key 就是密钥； 每一个 appid(sn) 对应 有且唯一的一个 key
+   2. 如果要正常使用各接口，需要按照以下方式去进行签名验证:
+   3. 平台所有的API仅支持JSON格式的请求调用，请务必在HTTP请求头中加入Content-Type: application/json。
+   4. 所有请求的body都需采用UTF-8编码，所有响应也会采用相同编码。
+   5. 平台所有的API调用都需要签名验证。
+   6. 采用应用层签名机制。将HTTP请求body部分的UTF-8编码字节流视为被签名的内容，不关心主体的格式。
+   7. 签名人序列号(sn)和签名值(sign)放在HTTP请求头中，在接入服务中统一校验。
+   8. 签名算法: sign = MD5( CONCAT( body + key ) )
+   9. 签名首部: Authorization: sn + " " + sign
+   10. 所有返回参数都为 JSON 格式，请务必在HTTP请求头中加入Content-Type: application/json。
+   11. 所有请求的body都需采用UTF-8编码，所有响应也会采用相同编码。
+   12. 所有返回数据的类型都是 字符串。
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
+|sign|参数签名|varchar(32)|Y|参数签名验证|
+
+
+## 3 发票
+### 3.1 开票接口
+ - 接口地址：https://i.wosai.cn/api/invoice/apply/v1
+ - 访问方式：post
+ - 请求头
+   - Authorization: sn + " " + sign
+   - Content-Type : application/json;charset=utf-8
+ - 响应头
+   - Content-Type：application/json;charset=utf-8
+ - 参数说明：
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
 |appid|ISV分配给商户唯一标识|varchar(20)|Y| |
-|channel|支付渠道|varchar(10)|N|cash/bank/alipay,用于发票归集|
-|payer|用户支付渠道的唯一标识|varchar(10)|N|用于发票归集|
-|store_sn|商户门店唯一标识|varchar(20)|Y| |
-|biz_no|交易流水号|varchar(32)|Y| |
+|biz_no|交易流水号|varchar(32)|Y|交易流水号|
+|original_no|原始交易流水号|varchar(32)|N|原始交易流水号，订单退款时必传|
+|store_sn|商户门店唯一标识|varchar(20)|Y|商户门店唯一标识|
 |biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
 |amount|交易总金额|int|Y|单位为分|
+|type|交易类型|varchar(2)|Y|P-付款;R-退款
 |items|开票商品明细信息|[]|N|参考开票明细信息|
+|remark|备注|varchar(256)|N| |
+|title_type|抬头类型|varchar(2)|N|0-个人;1-企业|
+|title_name|抬头名称|varchar(80)|Y|付款方名称|
+|user_mail|消费者邮箱|varchar(100)|Y|消费者邮箱|
+|user_mobile|消费者联系方式|varchar(16)|Y|消费者电话号码|
+|taxpayer_no|购买方纳税人识别号|varchar(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|
+|user_bank_name|购买方开户行|varchar(100)|N|付款方开户行|
+|user_bank_account|购买方开户行账户|varchar(25)|N|付款方开户行账|
+|user_address|购买方地址|varchar(200)|N|付款方地址|
+|invoice_remark|发票备注|varchar(200)|N|部分省份会要求|
+|sign|参数签名|varchar(32)|Y|详见2.1.如何构造签名|
 |expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
-|sign|参数签名|varchar(32)|Y|详见2.2.如何构造签名|
-|channel|支付通道|varchar(20)|N| |
- - 请求响应的 Content Encoding: 这里需要注意的是，返回值的编码也应是 utf-8 的
+|channel|支付通道唯一标识|varchar(20)|N|用于发票归集|
+   - 交易名细
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|id|商品编号唯一标识|varchar(10)|Y|本次交易内商品唯一标识,退货时退货商品id需要对应该id|
+|tax_no|商品税务映射编号|varchar(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
+|name|发票项目名称或商品名称|varchar(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
+|num|商品数量|int|N|参数为空时，默认为1|
+|zero_type|零税率标识|varchar(2)|N|只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|
+|row_type|发票行性质|varchar(10)|Y|0表示正常行，1表示折扣行，2表示被折扣行|
+|item_amount|单项商品总价|int|Y|明细所有item_amount累加和等于总amount,单位为分|
 
-
- - 开票商品明细信息
-
+ - 开票商品明细信息(items 中的每个 item)
  
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
@@ -105,34 +91,92 @@
 
 
  - 参数示例：
-https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=%5B%7B%22id%22%3A%221%22%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%22name%22%3A%22%E5%93%81%E7%B1%BB%E4%B8%80%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dname%22%3A%22%E5%93%81%E7%B1%BB%E4%BA%8C%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%5D
+https://i.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=%5B%7B%22id%22%3A%221%22%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%22name%22%3A%22%E5%93%81%E7%B1%BB%E4%B8%80%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dname%22%3A%22%E5%93%81%E7%B1%BB%E4%BA%8C%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%5D
+```javascript
+{
+    "appid": "2200000001",
+    "biz_no": "22000000012",
+    "store_sn": "2200000011",
+    "biz_time": "1488262165",
+    "amount": "10000",
+    "type": "P",
+    "title_name": "发票抬头",
+    "user_email": "user@example.com",
+    "user_mobile": "18268888888",
+    "sign": "3F0A972181F976CEF1918D0F005002F1",
+    "items": [
+        {
+            "id": "1",
+            "tax_no": "1001",
+            "name": "商品一",
+            "num": "1",
+            "row_type": "0",
+            "item_amount": "4000"
+        },
+        {
+            "id": "2",
+            "tax_no": "1002",
+            "name": "商品二",
+            "num": "3",
+            "row_type": "0",
+            "item_amount": "2000"
+        }
+    ]
+}
+```
 
- - 返回说明：返回网页交互界面，用户在此交互界面确认订单信息和填写抬头。
+ - 返回说明：
+|字段名|字段含义|取值|必要|备注|
+|----|:---|:---|:--:|--------|
+|biz_response|业务响应数据|数组结构|N|通讯|成功|的时候才返回|
+|biz_response.data|成功提示消息|比如|"开票申请成功"|N| |
+|biz_response.error_code|业务执行结果返回码|见附录|N| |
+|biz_response.error_message|业务执行错误信息|见附录	|N|业务执行成功才返回|
+|biz_response.result_code|业务执行响应码|10000|N| |
+|error_code|通讯错误码|见附录《公共错误码》|N|通讯 失败 的时候才返回|
+|error_message|通讯错误信息描述|见附录《公共错误码》|N|通讯 失败 的时候才返回|
+|result_code|通讯响应码|200，400，500|Y|200：通讯成功；400：客户端错误；500:服务端错误|
+
+ - 正常返回示例
+```javascript
+{
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "10000",
+        "data": "开票申请成功"
+    }
+}
+
+```
 
 
-###3.2 查询订单商品明细接口
+
+### 3.2 查询订单商品明细接口
     收钱吧调用商户提供的接口，查询订单的商品明细。
 	用户提交开票请求时，收钱吧没有开票请求订单的商品明细，因此需要通过商户提供的“查询订单商品明细接口”查询订单商品明细，完成开票。
 
-- 接口地址：{api_domain}/api/invoice/queryItems/v1
-- 接口需商户提供
-- 访问方式：post
-- 请求参数说明：
+ - 接口地址：{api_domain}/api/invoice/queryItems/v1
+ - 接口需商户提供
+ - 访问方式：post
+ - 请求头
+   - Authorization: sn + " " + sign
+   - Content-Type : application/json;charset=utf-8
+ - 响应头
+   - Content-Type：application/json;charset=utf-8
+ - 请求参数说明：
 
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |biz_no|交易流水号|varchar(32)|Y|交易流水号|
-|sign|参数签名|varchar(32)|Y|参数签名验证|
-|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
+|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回,用户自定义字段|
 
 
 - 参数示例：
 
 ```javascript
 {
-    "biz_no": "22000000012",
-    "sign": "0AD7AE3494B0C16F8B7A5BAE7B21926A"
+    "biz_no": "22000000012"
 }
 ```
 
@@ -204,7 +248,7 @@ https://m.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
 
 
 
-###3.3 开票结果通知接口
+### 3.3 开票结果通知接口
     开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回SUCCESS或通知8次为止。
 
 - 接口地址：{api_domain}/api/invoice/notify/v1
