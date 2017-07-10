@@ -11,7 +11,7 @@
  > * 第三步：在交易发生时基于<3.1申请电子发票>接口构建发票申请http网页地址，再基于此http地址生成二维码打印在收银票据上；
  > * 第四步：开发接收通知的接口，订阅收钱吧推送的开票结果信息。
 
-## 2.通用说明
+## 2.通用接口
 
 ### 2.1 如何构造签名
 
@@ -34,10 +34,14 @@
 |----|:---|:---|:--:|--------|
 |sign|参数签名|varchar(32)|Y|参数签名验证|
 
+### 2.2 二维码生成接口
+二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码, 其中,
 
-## 3 发票
+
+
+## 3 开票
 ### 3.1 开票接口
- - 接口地址：https://i.wosai.cn/api/invoice/apply/v1
+ - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
  - 请求头
    - Authorization: sn + " " + sign
@@ -91,7 +95,6 @@
 
 
  - 参数示例：
-https://i.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn=2200000011&biz_no=22000000012&biz_time=1488262165&amount=1000000&sign=MDYCGQCNTJhYa4JghYuksPMsE8jO33sq&items=%5B%7B%22id%22%3A%221%22%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%22name%22%3A%22%E5%93%81%E7%B1%BB%E4%B8%80%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%2C%7B%22id%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dtax_no%E2%80%9D%3A%E2%80%9D2%E2%80%9D%2C%E2%80%9Dname%22%3A%22%E5%93%81%E7%B1%BB%E4%BA%8C%22%2C%22num%22%3A%221%22%2C%22item_amount%22%3A%2211200%22%7D%5D
 ```javascript
 {
     "appid": "2200000001",
@@ -103,6 +106,7 @@ https://i.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
     "title_name": "发票抬头",
     "user_email": "user@example.com",
     "user_mobile": "18268888888",
+    "taxpayer_no": "9133010060913454XP",
     "sign": "3F0A972181F976CEF1918D0F005002F1",
     "items": [
         {
@@ -128,12 +132,15 @@ https://i.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
  - 返回说明：
 |字段名|字段含义|取值|必要|备注|
 |----|:---|:---|:--:|--------|
-|biz_response|业务响应数据|数组结构|N|通讯|成功|的时候才返回|
-|biz_response.data|成功提示消息|比如|"开票申请成功"|N| |
+|biz_response|业务响应数据|数组结构|N|通讯成功的时候才返回|
+|biz_response.data|成功提示消息| |N| |
+|biz_response.data.invoice_status|开票状态| |N| |
+|biz_response.data.message|信息提示| |N| |
+|biz_response.data.invoice_process_no|开票任务唯一标识|N|开票申请成功的时返回|
 |biz_response.error_code|业务执行结果返回码|见附录|N| |
 |biz_response.error_message|业务执行错误信息|见附录	|N|业务执行成功才返回|
 |biz_response.result_code|业务执行响应码|10000|N| |
-|error_code|通讯错误码|见附录《公共错误码》|N|通讯 失败 的时候才返回|
+|error_code|通讯错误码|见附录《通讯错误列表》|N|通讯 失败 的时候才返回|
 |error_message|通讯错误信息描述|见附录《公共错误码》|N|通讯 失败 的时候才返回|
 |result_code|通讯响应码|200，400，500|Y|200：通讯成功；400：客户端错误；500:服务端错误|
 
@@ -143,160 +150,202 @@ https://i.wosai.cn/api/invoice/apply/v1?appid=2200000001&channel=alipay&store_sn
     "result_code": "200",
     "biz_response": {
         "result_code": "10000",
-        "data": "开票申请成功"
+        "data": {
+            "invoice_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
+            "message": "开票接口的",
+            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
     }
 }
 
 ```
 
-
-
-### 3.2 查询订单商品明细接口
-    收钱吧调用商户提供的接口，查询订单的商品明细。
-	用户提交开票请求时，收钱吧没有开票请求订单的商品明细，因此需要通过商户提供的“查询订单商品明细接口”查询订单商品明细，完成开票。
-
- - 接口地址：{api_domain}/api/invoice/queryItems/v1
- - 接口需商户提供
+### 3.2 开票结果查询接口
+ - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
  - 请求头
    - Authorization: sn + " " + sign
    - Content-Type : application/json;charset=utf-8
  - 响应头
    - Content-Type：application/json;charset=utf-8
- - 请求参数说明：
-
-
+ - 参数说明：
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|biz_no|交易流水号|varchar(32)|Y|交易流水号|
-|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回,用户自定义字段|
-
-
-- 参数示例：
-
-```javascript
-{
-    "biz_no": "22000000012"
-}
-```
-
-- 返回参数：
-
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|biz_no|交易流水号|varchar(32)|Y|交易流水号|
-|original_no|原始交易流水号|varchar(32)|N|原始交易流水号，订单退款时必返回|
-|store_sn|交易门店编号|varchar(20)|Y|商户门店唯一标识|
-|biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
-|amount|交易总金额|int|Y|单位为分|
-|type|交易类型|varchar(2)|Y|P-付款；R-退款|
-|items|交易商品明细|[]|N|参考交易商品明细|
-|remark|备注|varchar(256)|N| |
-|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
-
-- 交易商品明细
-
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|id|商品唯一标识|varchar(10)|Y| |
-|tax_no|商品税务映射编号|varchar(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
-|name|发票项目名称或商品名称|varchar(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
-|num|商品数量|int|N| |
-|item_amount|单项商品总价|int|Y|单位为分|
-
-- 返回示例：
-
-```javascript
-{
-    "biz_no": "22000000012",
-    "store_sn": "2200000011",
-    "biz_time": "1488262165",
-    "amount": "1000000",
-    "type": "P",
-    "items": [
-        {
-            "tax_no": "1001",
-            "id": "1",
-            "name": "商品一",
-            "num": "1",
-            "item_amount": "400000"
-        },
-        {
-            "tax_no": "1002",
-            "id": "2",
-            "name": "商品二",
-            "num": "1",
-            "item_amount": "200000"
-        },
-        {
-            "tax_no": "1003",
-            "id": "3",
-            "name": "商品三",
-            "num": "1",
-            "item_amount": "300000"
-        },
-        {
-            "tax_no": "1004",
-            "id": "4",
-            "name": "商品四",
-            "num": "1",
-            "item_amount": "100000"
-        }
-    ]
-}
-```
-
-
-
-### 3.3 开票结果通知接口
-    开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回SUCCESS或通知8次为止。
-
-- 接口地址：{api_domain}/api/invoice/notify/v1
-- 接口需商户提供
-- 访问方式：post
-- 请求参数说明：
-
-
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|code|成功与否标识|varchar(10)|Y|SUCCESS / FAIL|
-|message|结果描述|varchar(100)|Y|开票失败时为错误描述|
 |biz_no|开票交易流水号|varchar(32)|Y|开票的交易流水号|
-|original_no|原始交易流水号|varchar(32)|N|开红票时必传|
-|timestamp|通知时间|varchar(10)|Y|以秒为单位的时间戳|
-|einv_code|发票代码|varchar(20)|N|开票成功必传|
-|einv_no|发票编号|varchar(20)|N|开票成功必传|
-|check_code|发票校验码|varchar(50)|N|开票成功必传|
-|title_name|发票抬头名称|varchar(80)|N|开票成功必传|
-|user_mobile|购买方电话|varchar(16)|N| |
-|user_register_no|购买方纳税人识别号|varchar(20)|N| |
-|expand|扩展字段|varchar(100)|N|原样返回申请电子发票接口传的参数|
 
-- 参数示例：
+ - 参数示例
+```javascript
+{
+    "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+ - 返回结果 进行中
+```javascript
+{
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "20000",
+        "sub_code": "INVOICE_APPLY_PROCESSING",
+        "sub_mesage": "开票处理中",
+        "data": {
+            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "biz_no": "22000000012"
+        }
+    }
+}
+```
+
+ - 返回结果 成功
+```javascript
+{
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "10000",
+        "data": {
+            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "biz_no": "22000000012",
+            "timestamp": "1488262167",
+            "einv_code": "150003528888",
+            "einv_no": "50877603",
+            "check_code": "59669422713395768932",
+            "invoice_date": "2017-01-12",
+            "invoice_amount": "100.00",
+            "title_name": "发票抬头",
+            "user_mobile": "18268888888",
+            "user_email":"123@qq.com",
+            "taxpayer_no": "9133010060913454XP"
+        }
+    }
+}
+```
+
+
+
+### 3.3 开票结果主动通知, 回调(web hook)规范, (被回调的接口由商户实现并提供)
+    商户提供接口接收 -> 收钱吧 开票成功（发票信息）或开票失败的通知信息。
+    开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回 10000 或通知8次为止。
+
+ - 回调接口地址：{user_callback_api}/v2
+ - 回调请求累心：post
+ - 回调请求头
+   - Authorization: sn + " " + sign
+   - Content-Type : application/json;charset=utf-8
+ - 回调响应头
+   - Content-Type：application/json;charset=utf-8
+ - 回调请求参数说明：
+
+
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|biz_response.result_code|成功与否标识|varchar(10)|Y|SUCCESS / FAIL|
+|biz_response.message|结果描述|varchar(100)|Y|开票失败时为错误描述|
+|biz_response.biz_no|开票交易流水号|varchar(32)|Y|开票的交易流水号|
+|biz_response.original_no|原始交易流水号|varchar(32)|N|开红票时必传|
+|biz_response.timestamp|通知时间|varchar(10)|Y|以秒为单位的时间戳|
+|biz_response.einv_code|发票代码|varchar(20)|N|开票成功必传|
+|biz_response.einv_no|发票编号|varchar(20)|N|开票成功必传|
+|biz_response.check_code|发票校验码|varchar(50)|N|开票成功必传|
+|biz_response.title_name|发票抬头名称|varchar(80)|N|开票成功必传|
+|biz_response.user_mobile|购买方电话|varchar(16)|N| |
+|biz_response.user_register_no|购买方纳税人识别号|varchar(20)|N| |
+|biz_response.expand|扩展字段|varchar(100)|N|原样返回申请电子发票接口传的参数|
+
+- 回调参数示例：
 
 ```javascript
 {
-    "code": "SUCCESS",
-    "message": "开票成功",
-    "biz_no": "22000000012",
-    "timestamp": "1488262167",
-    "einv_code": "150003528888",
-    "einv_no": "50877603",
-    "check_code": "59669422713395768932",
-    "title_name": "发票抬头",
-    "user_mobile": "18268888888",
-    "user_register_no": "9133010060913454XP"
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "10000",
+        "data": {
+            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "biz_no": "22000000012",
+            "timestamp": "1488262167",
+            "einv_code": "150003528888",
+            "einv_no": "50877603",
+            "check_code": "59669422713395768932",
+            "invoice_date": "2017-01-12",
+            "invoice_amount": "100.00",
+            "title_name": "发票抬头",
+            "user_mobile": "18268888888",
+            "user_email":"123@qq.com",
+            "taxpayer_no": "9133010060913454XP"
+        }
+    }
 }
 
 ```
 
-- 返回说明：
+- 回调返回说明：
 
- 商户收到通知后应返回字符串 SUCCESS ，收钱吧如果未收到SUCCESS，会重试8次推送通知。
+ 商户收到通知后应返回如下结果; 如果收钱吧未收到"成功"结果，或者没有调通回调接口, 会重试8次推送通知
 
-- 返回示例：
+- 回调返回示例：
 
 ```javascript
-	SUCCESS 
+{
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "10000",
+        "data": "接收开票信息成功"
+    }
+}
+```
+
+## 4 附录
+### 通讯响应码说明
+```
+200：通讯成功；400：客户端错误；500:服务端错误
+error_code为本次通讯的错误码，error_message为对应的中文描述。当result_code不等于200的时候才会出现error_code和error_message。
+result_code: 400，客户端错误。客户端请求错误。INVALID_PARAMS/参数错误；INVALID_TERMINAL/终端错误；ILLEGAL_SIGN/签名错误。
+result_code: 500，服务端错误。收钱吧服务端异常。可提示“服务端异常，请联系收钱吧客服”。
+```
+
+### 通讯错误码列表
+```
+error_code为本次通讯的错误码
+error_message为对应的中文描述
+当result_code不等于200的时候才会出现
+```
+
+|result_code|error_code|error_message|
+|----|:---|--------|
+|500|UNKNOWN_SYSTEM_ERROR|系统错误|
+|400|INVALID_PARAMS|参数错误|
+|400|ILLEGAL_SIGN|签名错误|
+
+### 接口公共返回响应码
+|字段名|字段含义|取值|备注|
+|----|:---|:---|--------|
+|result_code|通讯响应码|200，400，500|200：通讯成功；400：客户端错误；500:服务端错误|
+|error_code|通讯错误码|见附录《公共错误码》|通讯 失败 的时候才返回|
+|error_message|通讯错误信息描述|见附录《公共错误码》|通讯 失败 的时候才返回|
+|biz_response|业务响应数据|数组结构|通讯 成功 的时候才返回|
+|biz_response.result_code|业务执行响应码| | |
+|biz_response.error_code|业务执行错误,细分标识码| | |
+|biz_response.error_message|业务执行错误信息| |业务执行失败才返回|
+
+biz_response.result_code,状态分为：状态分为 10000、10001
+10000: 本次业务执行成功
+10001: 本次业务执行失败
+
+
+### 通讯错误返回实例
+ - 客户端参数错误
+```javascript
+{
+    "result_code": "400",
+    "error_code": "INVALID_PARAMETER",
+    "error_message": "appid不能为空",
+}
+```
+ - 服务端错误
+```javascript
+{
+    "result_code": "500",
+    "error_code": "UNKNOWN_SYSTEM_ERROR",
+    "error_message": "未知的系统错误",
+}
 ```
 
