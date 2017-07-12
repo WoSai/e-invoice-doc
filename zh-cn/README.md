@@ -35,11 +35,69 @@
 |sign|参数签名|varchar(32)|Y|参数签名验证|
 
 ### 2.2 二维码生成接口
-二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码, 其中,
+二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码
+
+ - 接口地址: {api_domain}/api/invoice/qrcode/v2
+ - 访问方式：post
+ - 请求头
+   - Authorization: sn + " " + sign
+   - Content-Type : application/json;charset=utf-8
+ - 响应头
+   - Content-Type：application/json;charset=utf-8
+ - 参数说明:
+|名称|含义|类型|必填|备注|
+|----|:---|:---|:--:|--------|
+|length|二维码的大小|int|Y|正整数,用来控制二维码的大小|
+|payway|支付通道唯一标识|String(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包|
+|payer_uid|付款人ID|String(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
+|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|varchar(32)|N| |
+|appid|ISV分配给商户唯一应用标识|String(20)|Y| |
+|store_sn|门店唯一标识|String(32)|Y| |
+|biz_no|交易流水号|String(32)|Y|交易流水号|
+|biz_time|交易时间|int|Y| |
+|amount|数量|int|Y| |
+|client_sn|商户系统订单号|String(32)|
+|url|user_api_domain + uri_path|varchar(100)|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`|
+ - 参数示例:
+```javascript
+{
+    "length":200,
+    "appid": "2200000001",
+    "biz_no": "22000000012",
+    "store_sn": "2200000011",
+    "biz_time": "1488262165",
+    "amount":8,
+    "client_sn":"18348290098298292838",
+    "url":"https://www.any/com/invoice/preapply/h5"
+}
+```
+生成二维码的Content是
+```
+{url}?appid={appid}&biz_no={biz_no}&store_sn={store_sn}&biz_time={biz_time}&amount={amount}&client_sn={client_sn}&sign={sign}
+```
+
+ - 返回示例
+```
+{
+    "result_code": "200",
+    "biz_response": {
+        "result_code": "10000",
+        "data": {
+            "image":"data:image/png;base64,xxxxxxxxxxxxxxxxxxxxx"
+        }
+    }
+}
+
+```
 
 
 
 ## 3 开票
+
+开票的时序图
+![](../image/apply_seq_diagram.png?raw=true)
+
+
 ### 3.1 开票接口
  - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
@@ -51,7 +109,7 @@
  - 参数说明：
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|appid|ISV分配给商户唯一标识|varchar(20)|Y| |
+|appid|ISV分配给商户唯一应用标识|varchar(20)|Y| |
 |biz_no|交易流水号|varchar(32)|Y|交易流水号|
 |original_no|原始交易流水号|varchar(32)|N|原始交易流水号，订单退款时必传|
 |store_sn|商户门店唯一标识|varchar(20)|Y|商户门店唯一标识|
@@ -71,7 +129,9 @@
 |invoice_remark|发票备注|varchar(200)|N|部分省份会要求|
 |sign|参数签名|varchar(32)|Y|详见2.1.如何构造签名|
 |expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
-|channel|支付通道唯一标识|varchar(20)|N|用于发票归集|
+|payway|支付通道唯一标识|varchar(20)|N|用于发票归集|
+|payer_uid|付款人ID|String(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
+|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|varchar(32)|N| |
    - 交易名细
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
@@ -226,7 +286,7 @@
     商户提供接口接收 -> 收钱吧 开票成功（发票信息）或开票失败的通知信息。
     开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回 10000 或通知8次为止。
 
- - 回调接口地址：{user_callback_api}/v2
+ - 回调接口地址：{user_callback_api_domain}/v2
  - 回调请求累心：post
  - 回调请求头
    - Authorization: sn + " " + sign
