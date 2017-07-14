@@ -7,6 +7,8 @@
 
 
 
+
+
 喔噻开票平台, 提供3种接口,分别为
 1. 用户发票二维码生成, 用于访问开票前确认和补完信息的H5页面
 2. 开票接口
@@ -22,10 +24,18 @@
 本文档用于说明商户如何通过交易参数输出来生成电子发票二维码，客户可以通过扫描商户生成的电子发票二维码来实现在线开票的功能。
 
 要实现二维码生成，商户需要完成以下流程：
- > * 第一步：商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
- > * 第二步：基于第一步向ISV申请appid和密钥secret。注：为确保访问安全，商户应定期更新密钥；
- > * 第三步：在交易发生时基于<3.1申请电子发票>接口构建发票申请http网页地址，再基于此http地址生成二维码打印在收银票据上；
- > * 第四步：开发接收通知的接口，订阅收钱吧推送的开票结果信息。
+ > * 第1步: 商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
+ > * 第2步: 根据[对接前准备]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/business.html")开通自己的 开票APP,并获得 app_id
+ > * 第3步: 提交商户资料，获取[商户平台]("s.shouqianba.com")登录账号和密码,在[对接前准备]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/business.html")
+ ```
+ 进行获取 terminal_sn 和 terminal_key
+ ```
+ 通过
+ [激活接口]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/api/interface/activate.html")
+ [签到接口]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/api/interface/checkin.html")
+ 了解如何获取/更新签名的参数, 签名的方法可以参照 2.1
+ > * 第4步: 在交易发生时基于 <2.2 发票二维码生成接口> 构建发票预申请 http 网页地址，再基于此http地址生成的二维码打印在收银票据上；
+ > * 第5步: 开发接收通知的接口，订阅收钱吧推送的开票结果信息。
 
 ## 2.通用接口
 
@@ -33,7 +43,7 @@
 
 签名是在进行接口调用或者参数输出生成二维码的过程中，利用密钥和参数进行MD5签名的过程，具体流程如下：
  - 签名说明：
-   1. appid 就是构造签名的  sn， 而 给予的 key 就是密钥； 每一个 appid(sn) 对应 有且唯一的一个 key
+   1. terminal_sn 就是构造签名的  sn， 而 给予的 terminal_key 就是密钥； 每一个 sn 对应有且唯一的一个 key
    2. 如果要正常使用各接口，需要按照以下方式去进行签名验证:
    3. 平台所有的API仅支持JSON格式的请求调用，请务必在HTTP请求头中加入Content-Type: application/json。
    4. 所有请求的body都需采用UTF-8编码，所有响应也会采用相同编码。
@@ -50,7 +60,7 @@
 |----|:---|:---|:--:|--------|
 |sign|参数签名|varchar(32)|Y|参数签名验证|
 
-### 2.2 二维码生成接口
+### 2.2 发票二维码生成接口
 二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码
 
  - 接口地址: {api_domain}/api/invoice/qrcode/v2
@@ -59,37 +69,34 @@
    - Authorization: sn + " " + sign
    - Content-Type : application/json;charset=utf-8
  - 响应头
-   - Content-Type：application/json;charset=utf-8
+   - Content-Type : application/json;charset=utf-8
  - 参数说明:
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |length|二维码的大小|int|Y|正整数,用来控制二维码的大小|
-|payway|支付通道唯一标识|String(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包|
-|payer_uid|付款人ID|String(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
-|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|varchar(32)|N| |
-|appid|ISV分配给商户唯一应用标识|String(20)|Y| |
-|store_sn|门店唯一标识|String(32)|Y| |
-|biz_no|交易流水号|String(32)|Y|交易流水号|
-|biz_time|交易时间|int|Y| |
+|payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包|
+|payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
+|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N| |
+|terminal_sn|终端号|string|Y| |
+|client_biz_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
+|client_biz_time|交易时间|int|Y|timestamp,单位毫秒|
 |amount|数量|int|Y| |
-|client_sn|商户系统订单号|String(32)|
-|url|user_api_domain + uri_path|varchar(100)|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`|
+|url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100|
  - 参数示例:
 ```javascript
 {
     "length":200,
-    "appid": "2200000001",
-    "biz_no": "22000000012",
-    "store_sn": "2200000011",
-    "biz_time": "1488262165",
+    "terminal_sn":"10298371039",
+    "client_biz_no": "22000000012",
+    "client_biz_time": "1488262165",
     "amount":8,
-    "client_sn":"18348290098298292838",
-    "url":"https://www.any/com/invoice/preapply/h5"
+    "sign":"xxxxxxxxxxxxxxxxxxxxxxxx"
+    "url":"https://www.anycomany.com/invoice/preapply/h5"
 }
 ```
 生成二维码的Content是
 ```
-{url}?appid={appid}&biz_no={biz_no}&store_sn={store_sn}&biz_time={biz_time}&amount={amount}&client_sn={client_sn}&sign={sign}
+{url}?terminal_sn={terminal_sn}&client_biz_sn={client_biz_sn}&client_biz_time={client_biz_time}&amount={amount}&sign={sign}
 ```
 
  - 返回示例
@@ -121,33 +128,30 @@
    - Authorization: sn + " " + sign
    - Content-Type : application/json;charset=utf-8
  - 响应头
-   - Content-Type：application/json;charset=utf-8
+   - Content-Type : application/json;charset=utf-8
  - 参数说明：
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|appid|ISV分配给商户唯一应用标识|varchar(20)|Y| |
-|biz_no|交易流水号|varchar(32)|Y|交易流水号|
-|original_no|原始交易流水号|varchar(32)|N|原始交易流水号，订单退款时必传|
-|store_sn|商户门店唯一标识|varchar(20)|Y|商户门店唯一标识|
-|biz_time|交易时间|varchar(10)|Y|以秒为单位的时间戳|
+|terminal_sn|终端号|string|Y| |
+|client_biz_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
+|client_biz_time|交易时间|int|Y|timestamp,单位毫秒|
 |amount|交易总金额|int|Y|单位为分|
-|type|交易类型|varchar(2)|Y|P-付款;R-退款
+|type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
 |items|开票商品明细信息|[]|N|参考开票明细信息|
-|remark|备注|varchar(256)|N| |
-|title_type|抬头类型|varchar(2)|N|0-个人;1-企业|
-|title_name|抬头名称|varchar(80)|Y|付款方名称|
-|user_mail|消费者邮箱|varchar(100)|Y|消费者邮箱|
-|user_mobile|消费者联系方式|varchar(16)|Y|消费者电话号码|
-|taxpayer_no|购买方纳税人识别号|varchar(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|
-|user_bank_name|购买方开户行|varchar(100)|N|付款方开户行|
-|user_bank_account|购买方开户行账户|varchar(25)|N|付款方开户行账|
-|user_address|购买方地址|varchar(200)|N|付款方地址|
-|invoice_remark|发票备注|varchar(200)|N|部分省份会要求|
-|sign|参数签名|varchar(32)|Y|详见2.1.如何构造签名|
-|expand|扩展字段|varchar(100)|N|调用通知接口时，该参数会原样返回|
-|payway|支付通道唯一标识|varchar(20)|N|用于发票归集|
-|payer_uid|付款人ID|String(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
-|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|varchar(32)|N| |
+|remark|备注|string(256)|N| |
+|title_type|抬头类型|string(2)|N|0-个人;1-企业|
+|title_name|抬头名称|string(80)|Y|付款方名称|
+|user_mail|消费者邮箱|string(100)|Y|消费者邮箱|
+|user_mobile|消费者联系方式|string(16)|Y|消费者电话号码|
+|taxpayer_no|购买方纳税人识别号|string(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|
+|user_bank_name|购买方开户行|string(100)|N|付款方开户行|
+|user_bank_account|购买方开户行账户|string(25)|N|付款方开户行账|
+|user_address|购买方地址|string(200)|N|付款方地址|
+|invoice_remark|发票备注|string(200)|N|部分省份会要求|
+|reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
+|payway|支付通道唯一标识|string(20)|N|用于发票归集|
+|payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
+|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N| |
    - 交易名细
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
@@ -163,9 +167,9 @@
  
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|id|商品唯一标识|varchar(10)|Y|本次交易内唯一，退货时，退货商品的id需要对应该id|
-|tax_no|商品税务映射编号|varchar(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
-|name|发票项目名称或商品名称|varchar(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
+|id|商品唯一标识|string(10)|Y|本次交易内唯一，退货时，退货商品的id需要对应该id|
+|tax_no|商品税务映射编号|string(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
+|name|发票项目名称或商品名称|string(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
 |num|商品数量|int|N|折扣行参数不能填，非折扣行必填|
 |item_amount|单项商品总价|int|Y|单位为分|
 
@@ -173,17 +177,15 @@
  - 参数示例：
 ```javascript
 {
-    "appid": "2200000001",
-    "biz_no": "22000000012",
-    "store_sn": "2200000011",
-    "biz_time": "1488262165",
+    "terminal_sn": "2200000001",
+    "client_biz_sn": "22000000012",
+    "client_biz_time": "1488262165",
     "amount": "10000",
-    "type": "P",
+    "type": "B",
     "title_name": "发票抬头",
     "user_email": "user@example.com",
     "user_mobile": "18268888888",
     "taxpayer_no": "9133010060913454XP",
-    "sign": "3F0A972181F976CEF1918D0F005002F1",
     "items": [
         {
             "id": "1",
@@ -212,7 +214,7 @@
 |biz_response.data|成功提示消息| |N| |
 |biz_response.data.invoice_status|开票状态| |N| |
 |biz_response.data.message|信息提示| |N| |
-|biz_response.data.invoice_process_no|开票任务唯一标识|N|开票申请成功的时返回|
+|biz_response.data.invoice_process_sn|开票任务唯一标识|N|开票申请成功的时返回|
 |biz_response.error_code|业务执行结果返回码|见附录|N| |
 |biz_response.error_message|业务执行错误信息|见附录	|N|业务执行成功才返回|
 |biz_response.result_code|业务执行响应码|10000|N| |
@@ -229,7 +231,8 @@
         "data": {
             "invoice_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
             "message": "开票接口的",
-            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "reflect":reflect_struct
         }
     }
 }
@@ -247,12 +250,17 @@
  - 参数说明：
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|biz_no|开票交易流水号|varchar(32)|Y|开票的交易流水号|
+|terminal_sn|终端号|string|Y| |
+|biz_response.client_biz_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_biz_sn和invoice_process_sn任意传一个|
+|biz_response.data.invoice_process_sn|开票任务唯一标识|N|开票申请成功的时返回|
 
  - 参数示例
 ```javascript
 {
-    "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    "terminal_sn": "2200000001",
+    "client_biz_sn": "22000000012",
+    "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
 }
 ```
 
@@ -265,8 +273,9 @@
         "sub_code": "INVOICE_APPLY_PROCESSING",
         "sub_mesage": "开票处理中",
         "data": {
-            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "biz_no": "22000000012"
+            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "client_biz_sn": "22000000012",
+            "terminal_sn":"2200000001"
         }
     }
 }
@@ -279,8 +288,8 @@
     "biz_response": {
         "result_code": "10000",
         "data": {
-            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "biz_no": "22000000012",
+            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "client_biz_sn": "22000000012",
             "timestamp": "1488262167",
             "einv_code": "150003528888",
             "einv_no": "50877603",
@@ -308,24 +317,24 @@
    - Authorization: sn + " " + sign
    - Content-Type : application/json;charset=utf-8
  - 回调响应头
-   - Content-Type：application/json;charset=utf-8
+   - Content-Type : application/json;charset=utf-8
  - 回调请求参数说明：
 
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|biz_response.result_code|成功与否标识|varchar(10)|Y|SUCCESS / FAIL|
-|biz_response.message|结果描述|varchar(100)|Y|开票失败时为错误描述|
-|biz_response.biz_no|开票交易流水号|varchar(32)|Y|开票的交易流水号|
-|biz_response.original_no|原始交易流水号|varchar(32)|N|开红票时必传|
-|biz_response.timestamp|通知时间|varchar(10)|Y|以秒为单位的时间戳|
-|biz_response.einv_code|发票代码|varchar(20)|N|开票成功必传|
-|biz_response.einv_no|发票编号|varchar(20)|N|开票成功必传|
-|biz_response.check_code|发票校验码|varchar(50)|N|开票成功必传|
-|biz_response.title_name|发票抬头名称|varchar(80)|N|开票成功必传|
-|biz_response.user_mobile|购买方电话|varchar(16)|N| |
+|biz_response.result_code|成功与否标识|string(10)|Y|SUCCESS / FAIL|
+|biz_response.message|结果描述|string(100)|Y|开票失败时为错误描述|
+|biz_response.client_biz_sn|开票交易流水号|string(32)|Y|开票的交易流水号|
+|biz_response.original_no|原始交易流水号|string(32)|N|开红票时必传|
+|biz_response.timestamp|通知时间|string(10)|Y|以秒为单位的时间戳|
+|biz_response.einv_code|发票代码|string(20)|N|开票成功必传|
+|biz_response.einv_no|发票编号|string(20)|N|开票成功必传|
+|biz_response.check_code|发票校验码|string(50)|N|开票成功必传|
+|biz_response.title_name|发票抬头名称|string(80)|N|开票成功必传|
+|biz_response.user_mobile|购买方电话|string(16)|N| |
 |biz_response.user_register_no|购买方纳税人识别号|varchar(20)|N| |
-|biz_response.expand|扩展字段|varchar(100)|N|原样返回申请电子发票接口传的参数|
+|biz_response.reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
 - 回调参数示例：
 
@@ -346,7 +355,8 @@
             "title_name": "发票抬头",
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
-            "taxpayer_no": "9133010060913454XP"
+            "taxpayer_no": "9133010060913454XP",
+            "reflect":reflect_struct
         }
     }
 }
