@@ -23,7 +23,7 @@
 ## 1.接入说明
 本文档用于说明商户如何通过交易参数输出来生成电子发票二维码，客户可以通过扫描商户生成的电子发票二维码来实现在线开票的功能。
 
-要实现二维码生成，商户需要完成以下流程：
+
  > * 第1步: 商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
  > * 第2步: 根据[对接前准备]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/business.html")开通自己的 开票APP,并获得 app_id
  > * 第3步: 提交商户资料，获取[商户平台]("s.shouqianba.com")登录账号和密码,在[对接前准备]("https://wosai.gitbooks.io/shouqianba-doc/content/zh-cn/business.html")
@@ -133,6 +133,7 @@
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
+|notify_url|开票请求回调地址|string|Y| |
 |client_biz_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
 |client_biz_time|交易时间|int|Y|timestamp,单位毫秒|
 |amount|交易总金额|int|Y|单位为分|
@@ -181,6 +182,7 @@
     "client_biz_sn": "22000000012",
     "client_biz_time": "1488262165",
     "amount": "10000",
+    "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
     "type": "B",
     "title_name": "发票抬头",
     "user_email": "user@example.com",
@@ -308,6 +310,8 @@
 
 
 ### 3.3 开票结果主动通知, 回调(web hook)规范, (被回调的接口由商户实现并提供)
+这里的地址 , 已在 开票接口的 notify_url 中传入
+
     商户提供接口接收 -> 收钱吧 开票成功（发票信息）或开票失败的通知信息。
     开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回 10000 或通知8次为止。
 
