@@ -21,10 +21,13 @@
  通过
  [激活接口]("https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/api/interface/activate.html")
  [签到接口]("https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/api/interface/checkin.html")
+
   ```
   进行获取 terminal_sn 和 terminal_key
   ```
+
  > * 第4步:
+
  ```
  如果是接口开票, 直接阅读 开票接口, 不需要阅读 二维码生成接口
 
@@ -53,6 +56,7 @@ client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒
 amount|数量|int|Y| 
 url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
  - 参数示例:
+
 ```javascript
 {
     "length":200,
@@ -64,7 +68,9 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "url":"https://www.anycomany.com/invoice/preapply/h5"
 }
 ```
+
 生成二维码的Content是
+
 ```
 {url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&amount={amount}&sign={sign}
 ```
