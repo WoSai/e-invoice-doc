@@ -2,7 +2,7 @@
 所有的请求和响应 必须都使用 utf-8 字符编码
 
 喔噻平台的功能图
-![](../img/wosai_invoice_platform_arch.png?raw=true)
+![](../../img/wosai_invoice_platform_arch.png?raw=true)
 
 
 喔噻开票平台, 提供3种接口,分别为
@@ -46,6 +46,7 @@
  - 接口地址: {api_domain}/api/invoice/qrcode/v2
  - 访问方式：post
  - 参数说明:
+
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
 length|二维码的大小|int|Y|正整数,用来控制二维码的大小
@@ -55,6 +56,7 @@ client_sn|商户系统任务号|string|Y|必须在商户系统内唯一；且长
 client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒
 amount|数量|int|Y| 
 url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
+
  - 参数示例:
 
 ```javascript
@@ -95,13 +97,14 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ## 开票
 
 开票的时序图
-![](../img/apply_seq_diagram.png?raw=true)
+![](../../img/apply_seq_diagram.png?raw=true)
 
 
 ### 开票接口
  - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
  - 参数说明：
+
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
@@ -183,6 +186,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 
  - 返回说明：
+
 |字段名|字段含义|取值|必要|备注|
 |----|:---|:---|:--:|--------|
 |task_status|开票状态| |N| |
@@ -207,9 +211,10 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 
 ### 开票结果查询接口
- - 接口地址：{api_domain}/api/invoice/apply/v2
+ - 接口地址：{api_domain}/api/invoice/query/v2
  - 访问方式：post
  - 参数说明：
+
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
