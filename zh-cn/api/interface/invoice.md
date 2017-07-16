@@ -2,7 +2,7 @@
 所有的请求和响应 必须都使用 utf-8 字符编码
 
 喔噻平台的功能图
-![](../image/wosai_invoice_platform_arch.png?raw=true)
+![](../img/wosai_invoice_platform_arch.png?raw=true)
 
 
 喔噻开票平台, 提供3种接口,分别为
@@ -77,7 +77,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
  - 返回示例
 
-```
+```javascript
 {
     "result_code": "200",
     "biz_response": {
@@ -95,7 +95,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ## 开票
 
 开票的时序图
-![](../image/apply_seq_diagram.png?raw=true)
+![](../img/apply_seq_diagram.png?raw=true)
 
 
 ### 开票接口
