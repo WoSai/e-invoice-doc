@@ -14,7 +14,7 @@
 4. 开票结果主动通知 Callback
 
 
-## 1.接入说明
+## 接入说明
  > * 第1步: 商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
  > * 第2步: 根据[对接前准备]("https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/business.html")开通自己的 开票应用,并获得 app_id
  > * 第3步: 提交商户资料，获取[商户平台]("s.shouqianba.com")登录账号和密码,在[对接前准备]("https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/business.html")
@@ -24,11 +24,20 @@
   ```
   进行获取 terminal_sn 和 terminal_key
   ```
- > * 第4步: 在开票发生时基于 <2.2 发票二维码生成接口> 构建开票预申请 http 网页地址，再基于此http地址生成的二维码打印在收银票据上；
+ > * 第4步:
+ ```
+ 如果是接口开票, 直接阅读 开票接口, 不需要阅读 二维码生成接口
+
+ 如果需要通过生成二维码进行开票
+ 应在开票前先基于 <发票二维码生成接口> 构建开票预确认 http 网页地址, 然后基于此 http 地址生成的二维码打印在收银票据上；
+ 用户可以使用移动终端, 访问扫描这个二维码, 访问网页, 进行开票前确认或补完信息, 然后再通过页面的按钮操作进行开票
+ (其中, 二维码中的 "开票预确认" 的网页, 由客户应用层自行开发, 收钱吧仅提供 二维码生成接口)
+ ```
+
  > * 第5步: 开发接收通知的接口，订阅收钱吧推送的开票结果信息。
 
 
-### 2.2 发票二维码生成接口
+### 发票二维码生成接口
 二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码
 
  - 接口地址: {api_domain}/api/invoice/qrcode/v2
@@ -38,11 +47,9 @@
 ----|:---|:---|:--:|--------
 length|二维码的大小|int|Y|正整数,用来控制二维码的大小
 payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包
-payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"
-payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N| 
 terminal_sn|终端号|string|Y| 
-client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
-client_biz_time|交易时间|int|Y|timestamp,单位毫秒
+client_sn|商户系统任务号|string|Y|必须在商户系统内唯一；且长度不超过32字节
+client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒
 amount|数量|int|Y| 
 url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
  - 参数示例:
@@ -50,8 +57,8 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "length":200,
     "terminal_sn":"10298371039",
-    "client_biz_no": "22000000012",
-    "client_biz_time": "1488262165",
+    "client_sn": "22000000012",
+    "client_time": "1488262165",
     "amount":8,
     "sign":"xxxxxxxxxxxxxxxxxxxxxxxx"
     "url":"https://www.anycomany.com/invoice/preapply/h5"
@@ -59,7 +66,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 生成二维码的Content是
 ```
-{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_biz_time={client_biz_time}&amount={amount}&sign={sign}
+{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&amount={amount}&sign={sign}
 ```
 
  - 返回示例
@@ -67,7 +74,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "10000",
+        "result_code": "SUCCESS",
         "data": {
             "image":"data:image/png;base64,xxxxxxxxxxxxxxxxxxxxx"
         }
@@ -78,13 +85,13 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 
 
-## 3 开票
+## 开票
 
 开票的时序图
 ![](../image/apply_seq_diagram.png?raw=true)
 
 
-### 3.1 开票接口
+### 开票接口
  - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
  - 参数说明：
@@ -92,8 +99,8 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
 |notify_url|开票请求回调地址|string|Y| |
-|client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
-|client_biz_time|交易时间|int|Y|timestamp,单位毫秒|
+|client_sn|商户系统任务号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
+|client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒|
 |amount|交易总金额|int|Y|单位为分|
 |type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
 |items|开票商品明细信息|[]|N|参考开票明细信息|
@@ -138,8 +145,8 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
-    "client_biz_time": "1488262165",
-    "amount": "10000",
+    "client_time": "1488262165",
+    "amount": "INVOICE_SUCCESS",
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
     "type": "B",
     "title_name": "发票抬头",
@@ -170,28 +177,19 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
  - 返回说明：
 |字段名|字段含义|取值|必要|备注|
 |----|:---|:---|:--:|--------|
-|biz_response|业务响应数据|数组结构|N|通讯成功的时候才返回|
-|biz_response.data|成功提示消息| |N| |
-|biz_response.data.invoice_status|开票状态| |N| |
-|biz_response.data.message|信息提示| |N| |
-|biz_response.data.invoice_process_sn|开票任务唯一标识|N|开票申请成功的时返回|
-|biz_response.error_code|业务执行结果返回码|见附录|N| |
-|biz_response.error_message|业务执行错误信息|见附录	|N|业务执行成功才返回|
-|biz_response.result_code|业务执行响应码|10000|N| |
-|error_code|通讯错误码|见附录《通讯错误列表》|N|通讯 失败 的时候才返回|
-|error_message|通讯错误信息描述|见附录《公共错误码》|N|通讯 失败 的时候才返回|
-|result_code|通讯响应码|200，400，500|Y|200：通讯成功；400：客户端错误；500:服务端错误|
+|task_status|开票状态| |N| |
+|task_sn|开票任务唯一标识|N|开票申请成功的时返回|
+|reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
  - 正常返回示例
 ```javascript
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "10000",
+        "result_code": "INVOICE_SUCCESS",
         "data": {
-            "invoice_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
-            "message": "开票接口的",
-            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "task_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
+            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "reflect":reflect_struct
         }
     }
@@ -199,22 +197,22 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 ```
 
-### 3.2 开票结果查询接口
+### 开票结果查询接口
  - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
  - 参数说明：
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
-|biz_response.client_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和invoice_process_sn任意传一个|
-|biz_response.data.invoice_process_sn|开票任务唯一标识|N|开票申请成功的时返回|
+|client_sn|商户系统任务号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
+|data.task_sn|开票任务唯一标识|N|开票申请成功的时返回|
 
  - 参数示例
 ```javascript
 {
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
-    "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 }
 ```
@@ -224,11 +222,9 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "20000",
-        "sub_code": "INVOICE_APPLY_PROCESSING",
-        "sub_mesage": "开票处理中",
+        "result_code": "INVOICE_IN_PROGRESS",
         "data": {
-            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
             "terminal_sn":"2200000001"
         }
@@ -241,9 +237,9 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "10000",
+        "result_code": "INVOICE_SUCCESS",
         "data": {
-            "invoice_process_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
             "timestamp": "1488262167",
             "einv_code": "150003528888",
@@ -254,7 +250,8 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
             "title_name": "发票抬头",
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
-            "taxpayer_no": "9133010060913454XP"
+            "taxpayer_no": "9133010060913454XP",
+            "type":"B"
         }
     }
 }
@@ -262,11 +259,11 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 
 
-### 3.3 开票结果主动通知, 回调(web hook)规范, (被回调的接口由商户实现并提供)
+### 开票结果主动通知, 回调(web hook)规范, (被回调的接口由商户实现并提供)
 这里的地址 , 已在 开票接口的 notify_url 中传入
 
     商户提供接口接收 -> 收钱吧 开票成功（发票信息）或开票失败的通知信息。
-    开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回 10000 或通知8次为止。
+    开票完成后，收钱吧调用商户的接口推送开票结果信息，推送频率为（1m/2m/10m/1h/2h/6h/12h/24h）共8次，直到商户返回 SUCCESS 或通知8次为止。
 
  - 回调接口地址：{user_callback_api_domain}/v2
  - 回调请求累心：post
@@ -275,18 +272,17 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|biz_response.result_code|成功与否标识|string(10)|Y|SUCCESS / FAIL|
-|biz_response.message|结果描述|string(100)|Y|开票失败时为错误描述|
-|biz_response.client_sn|开票交易流水号|string(32)|Y|开票的交易流水号|
-|biz_response.original_no|原始交易流水号|string(32)|N|开红票时必传|
-|biz_response.timestamp|通知时间|string(10)|Y|以秒为单位的时间戳|
-|biz_response.einv_code|发票代码|string(20)|N|开票成功必传|
-|biz_response.einv_no|发票编号|string(20)|N|开票成功必传|
-|biz_response.check_code|发票校验码|string(50)|N|开票成功必传|
-|biz_response.title_name|发票抬头名称|string(80)|N|开票成功必传|
-|biz_response.user_mobile|购买方电话|string(16)|N| |
-|biz_response.user_register_no|购买方纳税人识别号|varchar(20)|N| |
-|biz_response.reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
+|task_sn|开票任务号|string(32)|Y|开票的交易流水号|
+|client_sn|商户系统任务号|string(32)|Y| |
+|finish_time|通知时间|string|Y|"1492506702864"|
+|channel_finish_time|通道完成时间|string|Y|"1492506305637"|
+|einv_code|发票代码|string(20)|N|开票成功必传|
+|einv_no|发票编号|string(20)|N|开票成功必传|
+|check_code|发票校验码|string(50)|N|开票成功必传|
+|title_name|发票抬头名称|string(80)|N|开票成功必传|
+|user_mobile|购买方电话|string(16)|N| |
+|user_register_no|购买方纳税人识别号|varchar(20)|N| |
+|reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
 - 回调参数示例：
 
@@ -294,11 +290,12 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "10000",
+        "result_code": "INVOICE_SUCCESS",
         "data": {
-            "invoice_process_no":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "biz_no": "22000000012",
-            "timestamp": "1488262167",
+            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "client_sn": "22000000012",
+            "finish_time": "1492506702864",
+            "channel_finish_time":"1492506305637",
             "einv_code": "150003528888",
             "einv_no": "50877603",
             "check_code": "59669422713395768932",
@@ -308,6 +305,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
             "taxpayer_no": "9133010060913454XP",
+            "type":"B",
             "reflect":reflect_struct
         }
     }
@@ -325,7 +323,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "10000",
+        "result_code": "SUCCESS",
         "data": "接收开票信息成功"
     }
 }
