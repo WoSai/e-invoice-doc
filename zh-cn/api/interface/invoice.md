@@ -70,6 +70,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 
  - 返回示例
+
 ```
 {
     "result_code": "200",
@@ -141,6 +142,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 
  - 参数示例：
+
 ```javascript
 {
     "terminal_sn": "2200000001",
@@ -182,6 +184,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
  - 正常返回示例
+
 ```javascript
 {
     "result_code": "200",
@@ -208,6 +211,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |data.task_sn|开票任务唯一标识|N|开票申请成功的时返回|
 
  - 参数示例
+
 ```javascript
 {
     "terminal_sn": "2200000001",
@@ -218,6 +222,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 
  - 返回结果 进行中
+
 ```javascript
 {
     "result_code": "200",
@@ -233,6 +238,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ```
 
  - 返回结果 成功
+
 ```javascript
 {
     "result_code": "200",
