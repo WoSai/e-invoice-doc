@@ -52,9 +52,9 @@
 length|二维码的大小|int|Y|正整数,用来控制二维码的大小
 payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包
 terminal_sn|终端号|string|Y| 
-client_sn|商户系统任务号|string|Y|必须在商户系统内唯一；且长度不超过32字节
-client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒
-amount|数量|int|Y| 
+client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
+client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
+quantity|数量|int|Y|
 url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
 
  - 参数示例:
@@ -65,7 +65,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "terminal_sn":"10298371039",
     "client_sn": "22000000012",
     "client_time": "1488262165",
-    "amount":8,
+    "quantity":8,
     "sign":"xxxxxxxxxxxxxxxxxxxxxxxx"
     "url":"https://www.anycomany.com/invoice/preapply/h5"
 }
@@ -74,7 +74,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 生成二维码的Content是
 
 ```
-{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&amount={amount}&sign={sign}
+{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&quantity={quantity}&sign={sign}
 ```
 
  - 返回示例
@@ -109,12 +109,11 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
 |notify_url|开票请求回调地址|string|Y| |
-|client_sn|商户系统任务号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
-|client_time|商户系统任务生成完成时间|int|Y|timestamp,单位毫秒|
-|amount|交易总金额|int|Y|单位为分|
+|client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
+|client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒|
+|total_amount|交易总金额|int|Y|单位为分|
 |type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
 |items|开票商品明细信息|[]|N|参考开票明细信息|
-|remark|备注|string(256)|N| |
 |title_type|抬头类型|string(2)|N|0-个人;1-企业|
 |title_name|抬头名称|string(80)|Y|付款方名称|
 |user_mail|消费者邮箱|string(100)|Y|消费者邮箱|
@@ -159,7 +158,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
     "client_time": "1488262165",
-    "amount": "INVOICE_SUCCESS",
+    "total_amount": 6000
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
     "type": "B",
     "title_name": "发票抬头",
@@ -220,7 +219,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
-|client_sn|商户系统任务号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
+|client_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
 |data.task_sn|开票任务唯一标识|N|开票申请成功的时返回|
 
  - 参数示例
@@ -292,7 +291,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
 |task_sn|开票任务号|string(32)|Y|开票的交易流水号|
-|client_sn|商户系统任务号|string(32)|Y| |
+|client_sn|商户系统订单号|string(32)|Y| |
 |finish_time|通知时间|string|Y|"1492506702864"|
 |channel_finish_time|通道完成时间|string|Y|"1492506305637"|
 |einv_code|发票代码|string(20)|N|开票成功必传|
