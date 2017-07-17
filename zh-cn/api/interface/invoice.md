@@ -220,7 +220,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
 |client_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
-|data.task_sn|开票任务唯一标识|N|开票申请成功的时返回|
+|task_sn|开票任务唯一标识|N|开票申请成功的时返回|
 
  - 参数示例
 
