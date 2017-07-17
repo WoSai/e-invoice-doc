@@ -125,7 +125,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |invoice_remark|发票备注|string(200)|N|部分省份会要求|
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 |payway|支付通道唯一标识|string(20)|N|用于发票归集|
-|payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID|"2801003920293239230239"|
+|payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID, 样例:"2801003920293239230239"|
 |payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N| |
 
    - 交易名细
