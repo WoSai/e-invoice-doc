@@ -111,7 +111,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |notify_url|开票请求回调地址|string|Y| |
 |client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
 |client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒|
-|total_amount|交易总金额|int|Y|单位为分|
+|invoice_amount|交易总金额|int|Y|单位为分|
 |type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
 |items|开票商品明细信息|[]|N|参考开票明细信息|
 |title_type|抬头类型|string(2)|N|0-个人;1-企业|
@@ -138,7 +138,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |num|商品数量|int|N|参数为空时，默认为1|
 |zero_type|零税率标识|string(2)|N|只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|
 |row_type|发票行性质|string(10)|Y|0表示正常行，1表示折扣行，2表示被折扣行|
-|item_amount|单项商品总价|int|Y|明细所有item_amount累加和等于总amount,单位为分|
+|item_amount|单项商品总价|int|Y|明细所有item_amount累加和等于总invoice_amount,单位为分|
 
  - 开票商品明细信息(items 中的每个 item)
  
@@ -158,7 +158,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
     "client_time": "1488262165",
-    "total_amount": 6000
+    "invoice_amount": 6000
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
     "type": "B",
     "title_name": "发票抬头",
