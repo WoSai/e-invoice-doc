@@ -192,6 +192,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 |----|:---|:---|:--:|--------|
 |task_status|开票状态| |N| |
 |task_sn|开票任务唯一标识|N|开票申请成功的时返回|
+|status|流水状态|见《业务结果码》|N| |
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
  - 正常返回示例
@@ -203,6 +204,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
         "result_code": "INVOICE_SUCCESS",
         "data": {
             "task_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
+            "status":"SUCCESS",
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "reflect":reflect_struct
         }
@@ -290,7 +292,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|task_sn|开票任务号|string(32)|Y|开票的交易流水号|
+|task_sn|开票任务号|string(32)|Y|开票的任务号|
 |client_sn|商户系统订单号|string(32)|Y| |
 |finish_time|通知时间|string|Y|"1492506702864"|
 |channel_finish_time|通道完成时间|string|Y|"1492506305637"|
