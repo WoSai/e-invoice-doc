@@ -50,7 +50,7 @@
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
 length|二维码的大小|int|Y|正整数,用来控制二维码的大小
-payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包
+payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡
 terminal_sn|终端号|string|Y| 
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
@@ -111,28 +111,28 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
  - 访问方式：post
  - 参数说明：
 
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|terminal_sn|终端号|string|Y| |
-|notify_url|开票请求回调地址|string|Y| |
-|client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
-|client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒|
-|invoice_amount|交易总金额|int|Y|单位为分|
-|type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
-|items|开票商品明细信息|[]|N|参考开票明细信息|
-|title_type|抬头类型|string(2)|N|0-个人;1-企业|
-|title_name|抬头名称|string(80)|Y|付款方名称|
-|user_mail|消费者邮箱|string(100)|Y|消费者邮箱|
-|user_mobile|消费者联系方式|string(16)|Y|消费者电话号码|
-|taxpayer_no|购买方纳税人识别号|string(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|
-|user_bank_name|购买方开户行|string(100)|N|付款方开户行|
-|user_bank_account|购买方开户行账户|string(25)|N|付款方开户行账|
-|user_address|购买方地址|string(200)|N|付款方地址|
-|invoice_remark|发票备注|string(200)|N|部分省份会要求|
-|reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
-|payway|支付通道唯一标识|string(20)|N|用于发票归集|
-|payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID, 样例:"2801003920293239230239"|
-|payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N| |
+名称|含义|类型|必填|备注
+----|:---|:---|:--:|--------
+terminal_sn|终端号|string|Y|
+notify_url|开票请求回调地址|string|Y|
+client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
+client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
+invoice_amount|交易总金额|int|Y|单位为分
+type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲
+items|开票商品明细信息|[]|N|参考开票明细信息
+title_type|抬头类型|string(2)|N|0-个人;1-企业
+title_name|抬头名称|string(80)|Y|付款方名称
+user_mail|消费者邮箱|string(100)|Y|消费者邮箱
+user_mobile|消费者联系方式|string(16)|Y|消费者电话号码
+taxpayer_no|购买方纳税人识别号|string(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。
+user_bank_name|购买方开户行|string(100)|N|付款方开户行
+user_bank_account|购买方开户行账户|string(25)|N|付款方开户行账
+user_address|购买方地址|string(200)|N|付款方地址
+invoice_remark|发票备注|string(200)|N|部分省份会要求
+reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }
+payway|支付通道唯一标识|string(20)|N|用于发票归集
+payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID, 样例:"2801003920293239230239"
+payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N|支付唯一标识
 
    - 交易名细
 
