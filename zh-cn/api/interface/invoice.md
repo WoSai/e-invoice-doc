@@ -97,7 +97,13 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ## 开票
 
 开票的时序图
-![](../../img/apply_seq_diagram.png?raw=true)
+
+![](../../img/invoice_normal.png?raw=true)
+
+![](../../img/invoice_error_user_return_fail.png?raw=true)
+
+![](../../img/invoice_error_call_user_no_response.png?raw=true)
+
 
 
 ### 开票接口
