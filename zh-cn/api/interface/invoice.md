@@ -72,6 +72,8 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "url":"https://www.anycompany.com/invoice/preapply/h5"
 }
 ```
+需要注意这里sign的生成规则
+
 
 生成二维码的Content是
 
@@ -269,7 +271,8 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
             "taxpayer_no": "9133010060913454XP",
-            "type":"B"
+            "type":"B",
+            "reflect":reflect_struct
         }
     }
 }
