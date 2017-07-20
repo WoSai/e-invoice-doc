@@ -55,7 +55,7 @@ terminal_sn|终端号|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 total_amount|总金额(分)|int|Y|
-url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
+url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.anycompany.com/invoice/preapply/h5`, 字符长度不超过100
 
 
  - 参数示例:
@@ -69,7 +69,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "client_time": "1488262165",
     "total_amount":8000,
     "sign":"xxxxxxxxxxxxxxxxxxxxxxxx",
-    "url":"https://www.anycomany.com/invoice/preapply/h5"
+    "url":"https://www.anycompany.com/invoice/preapply/h5"
 }
 ```
 
