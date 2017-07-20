@@ -54,18 +54,20 @@ payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:�
 terminal_sn|终端号|string|Y| 
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
-quantity|数量|int|Y|
+total_amount|总金额(分)|int|Y|
 url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.any.com/invoice/preapply/h5`, 字符长度不超过100
+
 
  - 参数示例:
 
 ```javascript
 {
     "length":200,
+    "payway":"1,100",
     "terminal_sn":"10298371039",
     "client_sn": "22000000012",
     "client_time": "1488262165",
-    "quantity":8,
+    "total_amount":8000,
     "sign":"xxxxxxxxxxxxxxxxxxxxxxxx"
     "url":"https://www.anycomany.com/invoice/preapply/h5"
 }
