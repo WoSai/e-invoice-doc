@@ -68,7 +68,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "client_sn": "22000000012",
     "client_time": "1488262165",
     "total_amount":8000,
-    "sign":"xxxxxxxxxxxxxxxxxxxxxxxx"
+    "sign":"xxxxxxxxxxxxxxxxxxxxxxxx",
     "url":"https://www.anycomany.com/invoice/preapply/h5"
 }
 ```
