@@ -122,7 +122,7 @@ notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 invoice_amount|交易总金额|int|Y|单位为分
-type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲
+type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
 items|开票商品明细信息|[]|N|参考开票明细信息
 title_type|抬头类型|string(2)|N|0-个人;1-企业
 title_name|抬头名称|string(80)|Y|付款方名称
