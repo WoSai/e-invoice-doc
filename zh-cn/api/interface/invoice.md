@@ -122,7 +122,7 @@ notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 invoice_amount|交易总金额|int|Y|单位为分
-type|开票类型|string(2)|Y|B-蓝票(开蓝票);R-红票(红冲)
+type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票);RED-红票(红冲)
 items|开票商品明细信息|[]|N|参考开票明细信息
 title_type|抬头类型|string(2)|N|0-个人;1-企业
 title_name|抬头名称|string(80)|Y|付款方名称
@@ -134,7 +134,7 @@ user_bank_account|购买方开户行账户|string(25)|N|付款方开户行账
 user_address|购买方地址|string(200)|N|付款方地址
 invoice_remark|发票备注|string(200)|N|部分省份会要求
 reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }
-payway|支付通道唯一标识|string(20)|N|用于发票归集
+payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡
 payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID, 样例:"2801003920293239230239"
 payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N|支付通道唯一标识
 
@@ -160,7 +160,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
     "client_time": "1488262165",
     "invoice_amount": 10000
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
-    "type": "B",
+    "type": "BLUE",
     "title_name": "发票抬头",
     "user_email": "user@example.com",
     "user_mobile": "18268888888",
@@ -271,7 +271,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
             "taxpayer_no": "9133010060913454XP",
-            "type":"B",
+            "type":"BLUE",
             "reflect":reflect_struct
         }
     }
@@ -326,7 +326,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "user_mobile": "18268888888",
             "user_email":"123@qq.com",
             "taxpayer_no": "9133010060913454XP",
-            "type":"B",
+            "type":"BLUE",
             "reflect":reflect_struct
         }
     }
