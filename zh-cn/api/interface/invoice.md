@@ -76,7 +76,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 生成二维码的Content是
 
 ```
-{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&quantity={quantity}&sign={sign}
+{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&total_amount={total_amount}&sign={sign}
 ```
 
  - 返回示例
