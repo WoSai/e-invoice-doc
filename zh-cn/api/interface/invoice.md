@@ -276,7 +276,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
             "client_task_sn": "22000009989",
-            "timestamp": "1488262167",
+            "finish_time": "1492506702864",
             "einv_code": "150003528888",
             "einv_no": "50877603",
             "check_code": "59669422713395768932",
@@ -312,7 +312,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |client_sn|商户系统订单号|string(32)|Y| |
 |client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |finish_time|通知时间|string|Y|"1492506702864"|
-|channel_finish_time|通道完成时间|string|Y|"1492506305637"|
+|channel_finish_time|通道完成时间|string|N|"1492506305637"|
 |einv_code|发票代码|string(20)|N|开票成功必传|
 |einv_no|发票编号|string(20)|N|开票成功必传|
 |check_code|发票校验码|string(50)|N|开票成功必传|
@@ -333,7 +333,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
             "client_task_sn": "22000009989",
-            "timestamp": "1488262167",
+            "finish_time": "1492506702864",
             "einv_code": "150003528888",
             "einv_no": "50877603",
             "check_code": "59669422713395768932",
