@@ -71,7 +71,12 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
     "url":"https://www.anycompany.com/invoice/preapply/h5"
 }
 ```
-需要注意这里sign的生成规则
+
+```
+需要注意, 由于用户签到后, terminal_key 就会变化, 而 sign 的生成规则就会发生变化, 所以用户应当自己维护一个由包含
+client_sn|terminal_sn|sign|client_time 这些内容组成的一个映射表;
+在发起二维码生成操作前, 先写入数据, 以做之后 用户以后 scan 二维码方位商户应用的H5页面时的商户应用端验签用
+```
 
 
 生成二维码的Content是
@@ -119,6 +124,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 terminal_sn|终端号|string|Y|
 notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
+client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 invoice_amount|交易总金额|int|Y|单位为分
 type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票);RED-红票(红冲)
@@ -156,6 +162,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 {
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
+    "client_task_sn": "22000009989",
     "client_time": "1488262165",
     "invoice_amount": 10000
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
@@ -190,6 +197,8 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |字段名|字段含义|取值|必要|备注|
 |----|:---|:---|:--:|--------|
 |task_status|开票状态| |N| |
+|client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
+|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |task_sn|开票任务唯一标识| |N|开票申请成功的时返回|
 |status|流水状态|见《业务结果码》|N| |
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
@@ -204,6 +213,8 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
         "data": {
             "task_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
             "status":"SUCCESS",
+            "client_sn":"22000000012",
+            "client_task_sn": "22000009989",
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "reflect":reflect_struct
         }
@@ -221,6 +232,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
 |client_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
+|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |task_sn|开票任务唯一标识|string|N|开票申请成功的时返回|
 
  - 参数示例
@@ -229,6 +241,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 {
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
+    "client_task_sn": "22000009989",
     "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 }
@@ -244,6 +257,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
         "data": {
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
+            "client_task_sn": "22000009989",
             "terminal_sn":"2200000001"
         }
     }
@@ -258,8 +272,10 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
     "biz_response": {
         "result_code": "INVOICE_SUCCESS",
         "data": {
+            "terminal_sn":"2200000001",
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
+            "client_task_sn": "22000009989",
             "timestamp": "1488262167",
             "einv_code": "150003528888",
             "einv_no": "50877603",
@@ -294,6 +310,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |----|:---|:---|:--:|--------|
 |task_sn|开票任务号|string(32)|Y|开票的任务号|
 |client_sn|商户系统订单号|string(32)|Y| |
+|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |finish_time|通知时间|string|Y|"1492506702864"|
 |channel_finish_time|通道完成时间|string|Y|"1492506305637"|
 |einv_code|发票代码|string(20)|N|开票成功必传|
@@ -312,10 +329,11 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
     "biz_response": {
         "result_code": "INVOICE_SUCCESS",
         "data": {
+            "terminal_sn":"2200000001",
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "client_sn": "22000000012",
-            "finish_time": "1492506702864",
-            "channel_finish_time":"1492506305637",
+            "client_task_sn": "22000009989",
+            "timestamp": "1488262167",
             "einv_code": "150003528888",
             "einv_no": "50877603",
             "check_code": "59669422713395768932",
