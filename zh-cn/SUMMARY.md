@@ -17,7 +17,6 @@
        * [4.4.1 接口响应字段](api/annex/responseParams.md)
        * [4.4.2 通讯状态码](api/annex/responseCode.md)
        * [4.4.3 业务结果码](api/annex/resultCode.md)
-       * [4.4.4 支付方式](api/annex/payway.md)
        * [4.4.5 接口响应模板](api/annex/responseExample.md)
     
     
