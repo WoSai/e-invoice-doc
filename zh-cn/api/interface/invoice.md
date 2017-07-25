@@ -124,7 +124,7 @@ client_sn|terminal_sn|sign|client_time 这些内容组成的一个映射表;
 terminal_sn|终端号|string|Y|
 notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
-client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节
+client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 invoice_amount|交易总金额|int|Y|单位为分
 type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票);RED-红票(红冲)
@@ -198,7 +198,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |----|:---|:---|:--:|--------|
 |task_status|开票状态| |N| |
 |client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节|
-|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
+|client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |task_sn|开票任务唯一标识| |N|开票申请成功的时返回|
 |status|流水状态|见《业务结果码》|N| |
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
@@ -232,7 +232,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |----|:---|:---|:--:|--------|
 |terminal_sn|终端号|string|Y| |
 |client_sn|商户系统订单号|string|N|必须在商户系统内唯一；且长度不超过32字节, client_sn和task_sn任意传一个|
-|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
+|client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |task_sn|开票任务唯一标识|string|N|开票申请成功的时返回|
 
  - 参数示例
@@ -310,7 +310,7 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 |----|:---|:---|:--:|--------|
 |task_sn|开票任务号|string(32)|Y|开票的任务号|
 |client_sn|商户系统订单号|string(32)|Y| |
-|client_task_sn|商户系统开票任务流水号|Y|必须在商户系统内唯一; 且长度不超过32字节|
+|client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节|
 |finish_time|通知时间|string|Y|"1492506702864"|
 |channel_finish_time|通道完成时间|string|N|"1492506305637"|
 |einv_code|发票代码|string(20)|N|开票成功必传|
