@@ -17,8 +17,8 @@ ERROR: 本次业务执行结果未知
 <font color="red">INVOICE_SUCCESS</font>|	开票操作成功	| 
 <font color="red">INVOICE_FAIL</font>	| 开票操作失败	| 
 <font color="red">INVOICE_IN_PROGRESS</font> | 开票中  | 用户方接口接受开票结果的主动推送，或者发起被动查询查看开票结果
-<font color="red">SUCCESS|	操作成功,**开发者根据返回的biz_response.data.task_status属性判断当前开票任务的状态。**
-<font color="red">FAIL	|操作失败（不会触发流程）
+<font color="red">SUCCESS|	操作成功,**开发者根据返回的biz_response.data.task_status属性判断当前开票任务的状态。**| 
+<font color="red">FAIL	|操作失败（不会触发流程）| 
 
 ### 任务状态列表
 
