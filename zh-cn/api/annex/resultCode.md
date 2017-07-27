@@ -27,14 +27,14 @@ biz_response.data.task_status
 取值 |含义  
 --------- | ------
 <font color="green">CREATED</font>	| <font color="red">任务已创建/开票中</font>
-<font color="green">INVOICED_BLUE</font>	    | <font color="red">开票成功</font>
-<font color="green">INVOICED_RED</font>    | <font color="red">红冲成功</font>
+<font color="green">INVOICED_BLUE_SUCCESS</font>	    | <font color="red">开票成功</font>
+<font color="green">INVOICED_RED_SUCCESS</font>    | <font color="red">红冲成功</font>
 
 **开发者根据返回的biz_response.data.task_status属性判断当前开票任务的状态。**
 
 ### 哪些状态是任务最终状态
-- INVOICED_BLUE
-- INVOICED_RED
+- INVOICED_BLUE_SUCCESS
+- INVOICED_RED_SUCCESS
 
 
 ### 流水状态列表
