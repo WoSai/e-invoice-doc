@@ -126,34 +126,52 @@ notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
-invoice_amount|交易总金额|int|Y|单位为分
-type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票);RED-红票(红冲)
-items|开票商品明细信息|[]|N|参考开票明细信息
-title_type|抬头类型|string(2)|N|0-个人;1-企业
-title_name|抬头名称|string(80)|Y|付款方名称
-user_mail|消费者邮箱|string(100)|Y|消费者邮箱
-user_mobile|消费者联系方式|string(16)|Y|消费者电话号码
-taxpayer_no|购买方纳税人识别号|string(20)|N|付款方名称为企业抬头时建议填写 注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。
-user_bank_name|购买方开户行|string(100)|N|付款方开户行
-user_bank_account|购买方开户行账户|string(25)|N|付款方开户行账
-user_address|购买方地址|string(200)|N|付款方地址
-invoice_remark|发票备注|string(200)|N|部分省份会要求
+business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
+invoice_type|开票类型|string(10)|Y|blue-蓝票(开蓝票);red-红票(红冲)
+payee_name|开票方名称，公司名(如:XX商城)|string(100)|Y|海尔商城
+payee_address|开票方地址(新版中为必传)|string(100)|Y|山东省青岛市
+payee_bankaccount|开票方银行及 帐号|string(100)|N|92523123213412341234
+payer_register_no|付款方税务登记证号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
+payee_operator|开票人|string(8)|Y|小张
+invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000
+invoice_memo|发票备注，有些省市会把此信息打印到PDF中|string(200)|N|电子发票测试
+invoice_time|开票日期, 格式"YYYY-MM-DD HH:SS:MM"|Date|Y|2015-05-21 12:00:00
+normal_invoice_code|原发票代码(开红票时传入)|string(12)|N|111100000000
+normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
+payee_register_no|收款方税务登记证号|string(20)|Y|20150201321123
+payer_address|消费者地址|string(100)|N|浙江省杭州市余杭区文一西路xxx号
+payer_bank_name|购买方开户行|string(100)|N|付款方开户行
+payer_bankaccount|付款方开票开户银行及账号|string(100)|N|123412341234
+payer_email|消费者电子邮箱|string|N|mytest@xxx.com
+payer_name|付款方名称, 对应发票台头|string(100)|Y|付款方名称, 对应发票台头
+payer_phone|消费者联系电话|string(20)|N|18234561212
+sum_price|合计金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000
+sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000
+payee_checker|复核人|string(8)|N|小林
+payee_receiver|收款人|string(8)|N|小张
+payee_phone|收款方电话|string(20)|N|18234561212
+invoice_items|开票商品明细信息|[]|N|参考开票明细信息
 reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }
 payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡
-payer_uid|付款人ID|string(64)|N|支付平台（微信，支付宝）上的付款人ID, 样例:"2801003920293239230239"
-payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝账号,微信账号等|string(32)|N|支付通道唯一标识
+payer_uid|指定支付通道对应的唯一标识,比如银行卡号,支付宝id,微信open_id等|string(64)|N|支付通道唯一标识
 
-   - 开票商品明细信息(items 中的每个 item)
+   - 开票商品明细信息(invoice_items 中的每个 item)
 
-|名称|含义|类型|必填|备注|
-|----|:---|:---|:--:|--------|
-|id|商品编号唯一标识|string(10)|Y|本次交易内商品唯一标识,退货时退货商品id需要对应该id|
-|tax_no|商品税务映射编号|string(4)|Y|商户在收钱吧电子发票商户平台配置的商品税率(开票明细名称、单位、税率、默认数量、商品税控税务唯一标识)的编号|
-|name|发票项目名称或商品名称|string(20)|N|如果传了，以传的值为准，没有传以tax_no对应的开票明细名称为准|
-|num|商品数量|int|N|参数为空时，默认为1|
-|zero_type|零税率标识|string(2)|N|只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|
-|row_type|发票行性质|string(10)|Y|0表示正常行，1表示折扣行，2表示被折扣行|
-|item_amount|单项商品总价|int|Y|明细所有item_amount累加和等于总invoice_amount,单位为分|
+名称|含义|类型|必填|备注
+----|:---|:---|:--:|--------
+item_no|商品税收编码|string|N|123456
+item_name|发票项目名称（或商品名称）|string|Y|电视机
+price|单价，单位为分,格式：10000。新版电子发票，折扣行此参数不能传，非折扣行必传；红票、蓝票都为正数|string|N|100.00
+quantity|数量, 默认为1。新版电子发票，折扣行此参数不能传，非折扣行必传； 当开红票时，该字段需为负数|string|N|10
+row_type|发票行性质。0表示正常行，1表示折扣行，2表示被折扣行。比如充电器单价100元，折扣10元，则明细为2行，充电器行性质为2，折扣行性质为1。如果充电器没有折扣，则值应为0|string|Y|0
+specification|规格型号,可选|string|N|X100
+sum_price|总价，格式：100.00； 当开红票时，该字段为负数|string|Y|100000
+tax|税额； 当开红票时，该字段为负数, 单位是分|string|Y|17000
+tax_rate|税率。税率只能为0或0.03或0.04或0.06或0.11或0.13或0.17|string|Y|0.17
+unit|单位。新版电子发票，折扣行不能传，非折扣行必传|string|N|台
+amount|价税合计。(等于sumPrice和tax之和) 当开红票时，该字段为负数;单位是分|string|Y|117000
+zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|string|N|1
+
 
 
  - 参数示例：
@@ -164,29 +182,34 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
     "client_sn": "22000000012",
     "client_task_sn": "22000009989",
     "client_time": "1488262165",
-    "invoice_amount": 10000
+    "bussiness_type":"0",
+    "invoice_amount": "117000",
+    "sum_price": "100000",
+    "sum_tax": "17000",
+    "invoice_time": "2017-01-12 12:00:00",
+    "invoice_type": "blue",
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
-    "type": "BLUE",
-    "title_name": "发票抬头",
-    "user_email": "user@example.com",
-    "user_mobile": "18268888888",
-    "taxpayer_no": "9133010060913454XP",
-    "items": [
+    "payee_name":"海尔商城",
+    "payee_address":"山东省青岛市",
+    "payee_operator":"小张",
+    "payer_name": "发票抬头",
+    "payer_email": "user@example.com",
+    "payer_phone": "18268888888",
+    "payer_register_no": "9133010060913454XP",
+    "invoice_items": [
         {
-            "id": "1",
-            "tax_no": "1001",
-            "name": "商品一",
-            "num": "1",
-            "row_type": "0",
-            "item_amount": "4000"
-        },
-        {
-            "id": "2",
-            "tax_no": "1002",
-            "name": "商品二",
-            "num": "3",
-            "row_type": "0",
-            "item_amount": "2000"
+            "item_no": "1001",
+            "item_name": "电视机",
+            "price":"10000",
+            "sum_price":"100000",
+            "tax":"17000",
+            "amount": "117000",
+            "unit":"台",
+            "tax_rate":"0.17",
+            "quantity": "10",
+            "zero_rate_flag": "1",
+            "row_type":"0",
+            "specification":"X100"
         }
     ]
 }
@@ -277,16 +300,17 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "client_sn": "22000000012",
             "client_task_sn": "22000009989",
             "finish_time": "1492506702864",
-            "einv_code": "150003528888",
-            "einv_no": "50877603",
-            "check_code": "59669422713395768932",
             "invoice_date": "2017-01-12",
-            "invoice_amount": "100.00",
-            "title_name": "发票抬头",
-            "user_mobile": "18268888888",
-            "user_email":"123@qq.com",
-            "taxpayer_no": "9133010060913454XP",
-            "type":"BLUE",
+            "invoice_code": "150003528888",
+            "invoice_no": "50877603",
+            "anti_fake_code": "CF6B2F6168420008",
+            "invoice_amount": "117000",
+            "file_path":"demo",
+            "payer_name": "发票抬头",
+            "payer_mobile": "18268888888",
+            "payer_email":"123@qq.com",
+            "payer_register_no": "9133010060913454XP",
+            "invoice_type":"blue",
             "reflect":reflect_struct
         }
     }
@@ -308,17 +332,23 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
 
 |名称|含义|类型|必填|备注|
 |----|:---|:---|:--:|--------|
-|task_sn|开票任务号|string(32)|Y|开票的任务号|
-|client_sn|商户系统订单号|string(32)|Y| |
+|client_sn|商户系统订单号|string|Y| |
 |client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节|
+|task_sn|开票任务号|string|Y|开票的任务号|
 |finish_time|通知时间|string|Y|"1492506702864"|
 |channel_finish_time|通道完成时间|string|N|"1492506305637"|
-|einv_code|发票代码|string(20)|N|开票成功必传|
-|einv_no|发票编号|string(20)|N|开票成功必传|
-|check_code|发票校验码|string(50)|N|开票成功必传|
-|title_name|发票抬头名称|string(80)|N|开票成功必传|
-|user_mobile|购买方电话|string(16)|N| |
-|user_register_no|购买方纳税人识别号|varchar(20)|N| |
+|invoice_date|开票日期|string|Y|2017-01-12|
+|invoice_code|发票代码|string|N|开票成功必传, 1231231234|
+|invoice_no|发票编号|string|N|开票成功必传, 123123|
+|device_no|税控设备编号(新版电子发票有)|string|N|sw1231|
+|file_path|发票PDF的下载地址(仅在单个查询接口上显示，批量查询不显示)|string|N|demo|
+|file_data_type|文件类型(pdf,jpg,png)|string|Y|jpg|
+|ciphertext|发票密文，密码区的字符串|string|Y|demosdffsd-32432|
+|anti_fake_code|防伪码|string|Y|CF6B2F6168420008|
+|qr_code|二维码|string|Y|demo|
+|payer_register_no|购买方纳税人识别号|varchar(20)|N| |
+|payer_name|发票抬头名称|string(100)|N|开票成功必传|
+|payer_mobile|购买方电话|string(16)|N| |
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
 - 回调参数示例：
@@ -334,16 +364,17 @@ payer_login|指定支付通道对应的唯一标识,比如银行卡号,支付宝
             "client_sn": "22000000012",
             "client_task_sn": "22000009989",
             "finish_time": "1492506702864",
-            "einv_code": "150003528888",
-            "einv_no": "50877603",
-            "check_code": "59669422713395768932",
             "invoice_date": "2017-01-12",
-            "invoice_amount": "100.00",
-            "title_name": "发票抬头",
-            "user_mobile": "18268888888",
-            "user_email":"123@qq.com",
-            "taxpayer_no": "9133010060913454XP",
-            "type":"BLUE",
+            "invoice_code": "150003528888",
+            "invoice_no": "50877603",
+            "anti_fake_code": "CF6B2F6168420008",
+            "invoice_amount": "117000",
+            "file_path":"demo",
+            "payer_name": "发票抬头",
+            "payer_mobile": "18268888888",
+            "payer_email":"123@qq.com",
+            "payer_register_no": "9133010060913454XP",
+            "invoice_type":"blue",
             "reflect":reflect_struct
         }
     }
