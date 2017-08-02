@@ -129,6 +129,8 @@ client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
 invoice_type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票), RED-红票(红冲)
 apply_from|申请发起方角色类型|string|Y|PAYEE 和 PAYER
+m_short_name|定义商户的一级简称,用于标识商户品牌,如: 肯德基: KFC|string(20)|Y|KFC
+
 payee_name|开票方名称，公司名(如:XX商城)|string(100)|Y|海尔商城
 payee_address|开票方地址(新版中为必传)|string(100)|Y|山东省青岛市
 payee_bankaccount|开票方银行及 帐号|string(100)|N|92523123213412341234
