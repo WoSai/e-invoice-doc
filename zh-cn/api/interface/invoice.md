@@ -183,7 +183,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
     "terminal_sn": "2200000001",
     "client_sn": "22000000012",
     "client_task_sn": "22000009989",
-    "client_time": "1488262165",
+    "client_time": "1488262165000",
     "bussiness_type":"0",
     "invoice_amount": "117000",
     "apply_from":"PAYER",
