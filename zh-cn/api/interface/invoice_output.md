@@ -129,7 +129,7 @@ client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
 invoice_type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票), RED-红票(红冲)
 apply_from|申请发起方角色类型|string|N|PAYEE 和 PAYER, 默认值是 "PAYER"
-payer_register_no|付款方税务登记证号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
+payer_register_no|付款方税务纳税人识别号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
 invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000
 invoice_memo|发票备注，有些省市会把此信息打印到PDF中|string(200)|N|电子发票测试
 invoice_time|开票日期, 格式"YYYY-MM-DD HH:SS:MM"|Date|Y|2015-05-21 12:00:00
@@ -138,7 +138,7 @@ normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
 payer_address|消费者地址|string(100)|N|浙江省杭州市余杭区文一西路xxx号
 payer_bankaccount|付款方开票开户银行及账号|string(100)|N|123412341234
 payer_email|消费者电子邮箱|string|Y|mytest@xxx.com
-payer_name|付款方名称, 对应发票台头|string(100)|Y|付款方名称, 对应发票台头
+payer_name|付款方名称, 对应发票抬头|string(100)|Y|付款方名称, 对应发票抬头
 payer_phone|消费者联系电话|string(20)|Y|18234561212
 sum_price|合计金额，不含税金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000
 sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000
