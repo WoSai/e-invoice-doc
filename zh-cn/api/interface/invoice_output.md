@@ -129,19 +129,12 @@ client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
 invoice_type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票), RED-红票(红冲)
 apply_from|申请发起方角色类型|string|N|PAYEE 和 PAYER, 默认值是 "PAYER"
-m_short_name|定义商户的一级简称,用于标识商户品牌,如: 肯德基: KFC|string(20)|Y|KFC
-sub_m_short_name|定义商户的二级简称，用于标识商户品牌下的分支机构，如门店；如：肯德基-杭州西湖区文一西路店：KFC-HZ-19003，要求：“商户品牌简称+商户门店简称”作为确定商户及其下属机构的唯一标识，不可重复。|string(20)|Y|KFC-HZ-19003
-payee_name|开票方名称，公司名(如:XX商城)|string(100)|Y|海尔商城
-payee_address|开票方地址(新版中为必传)|string(100)|Y|山东省青岛市
-payee_bankaccount|开票方银行及 帐号|string(100)|N|92523123213412341234
 payer_register_no|付款方税务登记证号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
-payee_operator|开票人|string(8)|Y|小张
 invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000
 invoice_memo|发票备注，有些省市会把此信息打印到PDF中|string(200)|N|电子发票测试
 invoice_time|开票日期, 格式"YYYY-MM-DD HH:SS:MM"|Date|Y|2015-05-21 12:00:00
 normal_invoice_code|原发票代码(开红票时传入)|string(12)|N|111100000000
 normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
-payee_register_no|收款方税务登记证号|string(20)|Y|20150201321123
 payer_address|消费者地址|string(100)|N|浙江省杭州市余杭区文一西路xxx号
 payer_bankaccount|付款方开票开户银行及账号|string(100)|N|123412341234
 payer_email|消费者电子邮箱|string|Y|mytest@xxx.com
@@ -149,9 +142,6 @@ payer_name|付款方名称, 对应发票台头|string(100)|Y|付款方名称, �
 payer_phone|消费者联系电话|string(20)|Y|18234561212
 sum_price|合计金额，不含税金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000
 sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000
-payee_checker|复核人|string(8)|N|小林
-payee_receiver|收款人|string(8)|N|小张
-payee_phone|收款方电话|string(20)|N|18234561212
 invoice_items|开票商品明细信息|[]|N|参考开票明细信息
 reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }
 payway|支付通道唯一标识|string(20)|N|1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡; 如果经由多种支付完成，则可用英文 "," 进行连接， 比如： 1,100
@@ -186,17 +176,11 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
     "client_time": "1488262165000",
     "bussiness_type":"0",
     "invoice_amount": "117000",
-    "apply_from":"PAYER",
-    "m_short_name":"KFC",
-    "sub_m_short_name":"KFC-HZ-19003",
     "sum_price": "100000",
     "sum_tax": "17000",
     "invoice_time": "2017-01-12 12:00:00",
     "invoice_type": "blue",
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
-    "payee_name":"海尔商城",
-    "payee_address":"山东省青岛市",
-    "payee_operator":"小张",
     "payer_name": "发票抬头",
     "payer_email": "user@example.com",
     "payer_phone": "18268888888",

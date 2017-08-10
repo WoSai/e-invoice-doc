@@ -8,7 +8,7 @@
     * [4.3 对接接口列表]()
        * [4.3.1 激活接口](api/interface/activate.md)
        * [4.3.2 签到接口](api/interface/checkin.md)
-       * [4.3.3 开票](api/interface/invoice.md)
+       * [4.3.3 开票](api/interface/invoice_output.md)
           * [4.3.3.1 发票二维码生成接口]()
           * [4.3.3.2 开票接口]()
           * [4.3.3.3 开票结果查询接口]()
