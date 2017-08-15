@@ -29,77 +29,15 @@
  > * 第4步:
 
  ```
- 如果是接口开票, 直接阅读 开票接口, 不需要阅读 二维码生成接口
+ 如果是接口开票, 直接阅读 开票接口, 不需要阅读 二维码生成规范
 
  如果需要通过生成二维码进行开票
- 应在开票前先基于 <发票二维码生成接口> 构建开票预确认 http 网页地址, 然后基于此 http 地址生成的二维码打印在收银票据上；
- 用户可以使用移动终端, 访问扫描这个二维码, 访问网页, 进行开票前确认或补完信息, 然后再通过页面的按钮操作进行开票
- (其中, 二维码中的 "开票预确认" 的网页, 由客户应用层自行开发, 收钱吧仅提供 二维码生成接口)
+ 应在开票前先基于 <发票二维码生成规范> 生成存有开票预确认 http 网页地址的<二维码>, 然后将二维码打印在收银票据上；
+ 用户可以使用移动终端, 访问扫描这个二维码, 访问商户应用网页, 进行开票前确认或补完信息, 然后再通过页面的按钮，发起开票请求，<商户应用后端>收到<商户应用前端(H5)>的开票请求后，整合必要的其他必要参数，再由应用后端向<喔噻电子发票平台>发起开票请求
+ (二维码中的 "开票预确认" 的网页, 由商户应用层自行开发, 收钱吧仅提供 二维码生成规范)
  ```
 
  > * 第5步: 开发接收通知的接口，订阅收钱吧推送的开票结果信息。
-
-
-### 发票二维码生成方式 （该接口有商户自己实现，为了对应离线二维码打印）
-二维码生成接口, 用来根据给定的规则, 生成包含URL信息的二维码
-
- - 接口地址: {api_domain}/api/invoice/qrcode/v2
- - 访问方式：post
- - 参数说明:
-
-名称|含义|类型|必填|备注
-----|:---|:---|:--:|--------
-length|二维码的大小|int|Y|正整数,用来控制二维码的大小
-payway|支付通道唯一标识|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡
-terminal_sn|终端号|string|Y| 
-client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
-client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
-total_amount|总金额(分)|int|Y|
-auth|sn+" "+sign, 其中这里的 sign 是基于vender_sn 和 vender_key 的签名，签名方式可见[签名机制](https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/api/sign.html)|string|y|vender_sn + " " + sign 
-url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例如 `https://www.anycompany.com/invoice/preapply/h5`, 字符长度不超过100
-
-
- - 参数示例:
-
-```javascript
-{
-    "length":200,
-    "payway":"1,100",
-    "terminal_sn":"10298371039",
-    "client_sn": "22000000012",
-    "client_time": "1488262165",
-    "total_amount":10000,
-    "auth":"xxxxxxxxxxxxxxxxxxxx"
-    "url":"https://www.anycompany.com/invoice/preapply/h5"
-}
-```
-
-```
-需要注意, 二维码生成规范中的  sn 和 key 是 vender_sn 和 vender_key
-```
-
-
-生成二维码的Content是
-
-```
-{url}?terminal_sn={terminal_sn}&client_sn={client_sn}&client_time={client_time}&total_amount={total_amount}&auth={auth}
-```
-
- - 返回示例
-
-```javascript
-{
-    "result_code": "200",
-    "biz_response": {
-        "result_code": "SUCCESS",
-        "data": {
-            "image":"data:image/png;base64,xxxxxxxxxxxxxxxxxxxxx"
-        }
-    }
-}
-
-```
-
 
 
 ## 开票
@@ -123,7 +61,7 @@ url|{user_api_domain} + {uri_path}|string|Y|用户自己的支撑服务地址例
 ----|:---|:---|:--:|--------
 terminal_sn|终端号|string|Y|
 notify_url|开票请求回调地址|string|Y|
-client_sn|商户系统订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
+client_sn|商户系统原始订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
