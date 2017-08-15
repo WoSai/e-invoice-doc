@@ -59,7 +59,7 @@
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
 terminal_sn|终端号|string|Y|
-recommandation_info|推荐信息 由商家给出, 用于开票成功后给客户推送邮件时的特殊附加 url; 如果展示url, 使用格式如: ```[关注我们的官网](http://xxxx.xxx.xxx)```; 如果是要直接展示二维码, 使用格式如: ```[#qrcode](http://xxxx/xxx/xxx)|string(150)```|N|
+recommandation_info|推荐信息 由商家给出, 用于开票成功后给客户推送邮件时的特殊附加 url; 如果展示url, 使用格式如: <br/>``` [关注我们的官网](http://xxxx.xxx.xxx) ```; <br/>如果是要直接展示二维码, 使用格式如: <br/>``` [#qrcode](http://xxxx/xxx/xxx) ```|string(150)|N|
 notify_url|开票请求回调地址|string|Y|
 client_sn|商户系统原始订单号|string|Y|必须在商户系统内唯一；且长度不超过32字节
 client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统内唯一; 且长度不超过32字节
