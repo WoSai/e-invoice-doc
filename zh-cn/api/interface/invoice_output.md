@@ -66,7 +66,7 @@ client_task_sn|商户系统开票任务流水号|string|Y|必须在商户系统�
 client_time|商户系统订单完成时间|int|Y|timestamp,单位毫秒
 business_type|开票对象业务类型|string(1)|N|默认：0。对于商家对个人开具，为0;对于商家对企业开具，为1;
 invoice_type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票), RED-红票(红冲)
-apply_from|申请发起方角色类型|string|N|PAYEE 和 PAYER, 默认值是 "PAYER"
+apply_from|申请发起方角色类型|string|N|0: PAYEE 和 1: PAYER, 默认值是 0: "PAYER"
 payer_register_no|付款方税务纳税人识别号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
 invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000
 invoice_memo|发票备注，有些省市会把此信息打印到PDF中|string(200)|N|电子发票测试
