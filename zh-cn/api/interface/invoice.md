@@ -308,6 +308,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
             "invoice_date": "2017-01-12",
             "invoice_code": "150003528888",
             "invoice_no": "50877603",
+            "invoice_type": "0",
             "anti_fake_code": "CF6B2F6168420008",
             "invoice_amount": "117000",
             "file_path":"demo",
@@ -346,6 +347,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 |invoice_code|发票代码|string|N|开票成功必传, 1231231234|
 |invoice_no|发票编号|string|N|开票成功必传, 123123|
 |invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000|
+|invoice_type|开票类型|string(10)|Y|BLUE-蓝票(开蓝票), RED-红票(红冲)|
 |device_no|税控设备编号(新版电子发票有)|string|N|sw1231|
 |file_path|发票PDF的下载地址(仅在单个查询接口上显示，批量查询不显示)|string|N|demo|
 |file_data_type|文件类型(pdf,jpg,png)|string|Y|jpg|
@@ -373,6 +375,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
             "invoice_date": "2017-01-12",
             "invoice_code": "150003528888",
             "invoice_no": "50877603",
+            "invoice_type": "0",
             "anti_fake_code": "CF6B2F6168420008",
             "invoice_amount": "117000",
             "file_path":"demo",
