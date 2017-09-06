@@ -284,29 +284,23 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 
 ```javascript
 {
-    "result_code": "200",
-    "biz_response": {
-        "result_code": "INVOICE_SUCCESS",
-        "data": {
-            "terminal_sn":"2200000001",
-            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "client_sn": "22000000012",
-            "client_task_sn": "22000009989",
-            "finish_time": "1492506702864",
-            "invoice_date": "2017-01-12",
-            "invoice_code": "150003528888",
-            "invoice_no": "50877603",
-            "anti_fake_code": "CF6B2F6168420008",
-            "invoice_amount": "117000",
-            "file_path":"demo",
-            "payer_name": "发票抬头",
-            "payer_mobile": "18268888888",
-            "payer_email":"123@qq.com",
-            "payer_register_no": "9133010060913454XP",
-            "invoice_type":"0",
-            "reflect":reflect_struct
-        }
-    }
+    "terminal_sn":"2200000001",
+    "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "client_sn": "22000000012",
+    "client_task_sn": "22000009989",
+    "finish_time": "1492506702864",
+    "invoice_date": "2017-01-12",
+    "invoice_code": "150003528888",
+    "invoice_no": "50877603",
+    "anti_fake_code": "CF6B2F6168420008",
+    "invoice_amount": "117000",
+    "file_path":"demo",
+    "payer_name": "发票抬头",
+    "payer_mobile": "18268888888",
+    "payer_email":"123@qq.com",
+    "payer_register_no": "9133010060913454XP",
+    "invoice_type":"0",
+    "reflect":reflect_struct
 }
 
 ```
