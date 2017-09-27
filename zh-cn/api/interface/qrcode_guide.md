@@ -15,6 +15,14 @@
  ```
 
  其中 ECMA 定义的 encdoeURIComponent 实现范式文档位于 [文档](https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3) 当读完ECMA文档的15.1.3后，就能释然
+ 
+ - 参数说明
+名称|含义|类型|必填|备注
+----|:---|:---|:--:|--------
+wx_service_baseurl|微信授权服务地址|string(80)|Y|微信服务地址，由收钱吧给出
+appid|微信授权使用的appid|string|Y|由收钱吧给出
+redirect_user_uri|应用服务 url（比如 H5页面地址）|string(300)|Y|用户自己的支撑服务地址例如 https://www.anycompany.com/invoice/preapply/h5, 字符长度不超过300，如果由收钱吧代为开发，则此项由收钱吧给出
+
 
  - state 参数说明:
 
@@ -22,11 +30,10 @@
 ----|:---|:---|:--:|--------
 p|支付通道唯一标识(payway)|string(20)|N|用于发票归集, 1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡
 ts|终端号(terminal_sn)|string|Y| 
-cs|商户系统订单号(client_sn)string|Y|必须在商户系统内唯一；且长度不超过32字节
+cs|商户系统订单号(client_sn)|string|Y|必须在商户系统内唯一；且长度不超过32字节
 ct|商户系统订单完成时间(client_time)|int|Y|timestamp,单位毫秒
 ta|总金额(元)(total_amount)|int|Y|
-url|应用服务 url（比如 H5页面地址）|string|Y|用户自己的支撑服务地址例如 `https://www.anycompany.com/invoice/preapply/h5`, 字符长度不超过300
-a|即 auth，值为 sn+" "+sign, 其中这里的 sign 是基于vender_sn 和 vender_key 的签名，签名方式请看下面详细讲解|string|y|vender_sn + " " + sign 
+a|即 auth，值为 sn+" "+sign, 其中这里的 sign 是基于vender_sn 和 vender_key 的签名，签名方式请看下面详细讲解|string|Y|vender_sn + " " + sign 
 
 1. 基础 state 参数构造样例，不包含 a（即sign）
 
