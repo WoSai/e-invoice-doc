@@ -16,8 +16,8 @@
 
  其中 ECMA 定义的 encdoeURIComponent 实现范式文档位于 [文档](https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3) 当读完ECMA文档的15.1.3后，就能释然
  
- - 参数说明
- 
+ - 参数说明:
+
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
 wx_service_baseurl|微信授权服务地址|string(80)|Y|微信服务地址，由收钱吧给出
