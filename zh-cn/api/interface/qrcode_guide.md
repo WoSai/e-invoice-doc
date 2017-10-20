@@ -33,14 +33,14 @@ p|支付通道唯一标识(payway)|string(20)|N|用于发票归集, 1:支付宝 
 ts|终端号(terminal_sn)|string|Y| 
 cs|商户系统订单号(client_sn)|string|Y|必须在商户系统内唯一；且长度不超过32字节
 ct|商户系统订单完成时间(client_time)|int|Y|timestamp,单位毫秒
-ta|总金额(元)(total_amount)|int|Y|
+ta|总金额(分)(total_amount)|int|Y|
 a|即 auth，值为 sn+" "+sign, 其中这里的 sign 是基于vender_sn 和 vender_key 的签名，签名方式请看下面详细讲解|string|Y|vender_sn + " " + sign 
 
 1. 基础 state 参数构造样例，不包含 a（即sign）
 
 ```javascript
 // 基础 state 参数构造样例， 转义前
-baseStateParameter="p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=100.00"
+baseStateParameter="p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=10000"
 ```
 
 2. 构造 a(即 auth) 样例
@@ -68,11 +68,11 @@ a = vendor_sn + " " + signature
 ```javascript
 // 完整的 state 参数值， 转义前
 state=baseStateParameter + "|" + "a=" + a
-// 算出来， state 的值是 "p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=100.00|a=28910391282321983 cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来， state 的值是 "p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=10000|a=28910391282321983 cace5e52caf7e7b2ecbcc6d78c1260b8"
 
 // 使用 encodeURIComponent 编码后的的参数为 
 encodedState=encodeURIComponent(state)
-// 算出来, encodedState 的值是 "p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D100.00%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来, encodedState 的值是 "p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8"
 ```
 
 4. 最终生成的二维码的样例 
@@ -88,7 +88,7 @@ redirect_user_uri="https://einvoice.testalpha.shouqianba.com/xxxx/xxxx/h5"
 // 最终的二维码的 url 内容为
 //  {wx_service_baseurl}?appid={appid}&redirect_user_uri={encodeURIComponent(redirect_user_uri)}&state={encodeURIComponent(state)}&e=y
 qrcodeUrl=wx_service_baseurl + "?appid=" + appid + "&redirect_user_uri=" + encodeURIComponent(redirect_user_uri) + "&state=" + encodeURIComponent(state) + "&e=y"
-// 所以现在最终的链接值 为  "https://m.testalpha.wosai.com/wxservice/check.do?appid=2017891823646&redirect_user_uri=https%3A%2F%2Feinvoice.testalpha.shouqianba.com%2Fxxxx%2Fxxxx%2Fh5&state=p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D100.00%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8&e=y"
+// 所以现在最终的链接值 为  "https://m.testalpha.wosai.com/wxservice/check.do?appid=2017891823646&redirect_user_uri=https%3A%2F%2Feinvoice.testalpha.shouqianba.com%2Fxxxx%2Fxxxx%2Fh5&state=p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8&e=y"
 
 ```
 
