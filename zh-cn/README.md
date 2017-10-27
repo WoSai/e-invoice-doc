@@ -15,5 +15,5 @@
 
    接入者只需要对接这几个接口，即可方便的使用电子开票功能。
 
-   具体对接方式请查看[web api对接文档](https://wosai.gitbooks.io/e-invoice-doc/content/zh-cn/api/apiflow.html)
+   具体对接方式请查看[web api对接文档](https://doc.shouqianba.com/invoice/zh-cn/api/apiflow.html)
 
