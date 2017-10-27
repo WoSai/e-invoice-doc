@@ -1,0 +1,11 @@
+version: '2'
+services:
+  e-invoice-doc:
+    build: .
+    image: registry.wosai-inc.com/e-invoice-doc
+    restart: always
+    container_name: e-invoice-doc
+    ports:
+      - "11140:4000"
+    volumes:
+      - /usr/share/e-invoice-doc:/gitbook/_book
