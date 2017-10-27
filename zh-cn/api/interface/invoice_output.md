@@ -15,11 +15,11 @@
 
 ## 接入说明
  > * 第1步: 商户准备卖家纳税人识别号、开票卖家抬头、税率、商户简称、商户门店列表(商户门店唯一标识、商户简称、门店开票卖家抬头)；
- > * 第2步: 根据[对接前准备]("https://doc.shouqianba.com/invoice/zh-cn/bussiness.html")开通自己的 开票应用,并获得 app_id
- > * 第3步: 提交商户资料，获取[商户平台]("s.shouqianba.com")登录账号和密码,在[对接前准备]("https://doc.shouqianba.com/invoice/zh-cn/bussiness.html")
+ > * 第2步: 根据[对接前准备](https://doc.shouqianba.com/invoice/zh-cn/bussiness.html)开通自己的 开票应用,并获得 app_id
+ > * 第3步: 提交商户资料，获取[商户平台](s.shouqianba.com)登录账号和密码,在[对接前准备](https://doc.shouqianba.com/invoice/zh-cn/bussiness.html)
  通过
- [激活接口]("https://doc.shouqianba.com/invoice/zh-cn/api/interface/activate.html")
- [签到接口]("https://doc.shouqianba.com/invoice/zh-cn/api/interface/checkin.html")
+ [激活接口](https://doc.shouqianba.com/invoice/zh-cn/api/interface/activate.html)
+ [签到接口](https://doc.shouqianba.com/invoice/zh-cn/api/interface/checkin.html)
 
   ```
   进行获取 terminal_sn 和 terminal_key
