@@ -7,4 +7,5 @@ RUN npm install -g gitbook-cli
 ADD . /gitbook
 WORKDIR /gitbook
 RUN gitbook build
-ENTRYPOINT gitbook serve --lrport 11140 --port 11141
+ENTRYPOINT gitbook serve
+
