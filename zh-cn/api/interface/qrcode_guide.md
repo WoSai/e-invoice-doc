@@ -57,11 +57,11 @@ nouce=baseStateParameter
 
 // md5 使用 hex_md5
 signature=MD5(CONCAT(nouce + vendor_key))
-// 算出来，signature 的值为 "cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来，signature 的值为 "b09478cbf8239237942205eaa56a7d14"
 
 // 而 a(即 auth) 的值为 vendor_sn + signature
 a = vendor_sn + " " + signature
-// 算出来 a 的值为 "28910391282321983 cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来 a 的值为 "28910391282321983 b09478cbf8239237942205eaa56a7d14"
 ```
 
 3. 完整的 state 参数构造样例，包含 a(即 auth)
@@ -69,11 +69,11 @@ a = vendor_sn + " " + signature
 ```javascript
 // 完整的 state 参数值， 转义前
 state=baseStateParameter + "|" + "a=" + a
-// 算出来， state 的值是 "p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=10000|bc=0|a=28910391282321983 cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来， state 的值是 "p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=10000|bc=0|a=28910391282321983 b09478cbf8239237942205eaa56a7d14"
 
 // 使用 encodeURIComponent 编码后的的参数为 
 encodedState=encodeURIComponent(state)
-// 算出来, encodedState 的值是 "p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8"
+// 算出来, encodedState 的值是 "p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D28910391282321983%20b09478cbf8239237942205eaa56a7d14"
 ```
 
 4. 最终生成的二维码的样例 
@@ -89,7 +89,7 @@ redirect_user_uri="https://einvoice.testalpha.shouqianba.com/xxxx/xxxx/h5"
 // 最终的二维码的 url 内容为
 //  {wx_service_baseurl}?appid={appid}&redirect_user_uri={encodeURIComponent(redirect_user_uri)}&state={encodeURIComponent(state)}&e=y
 qrcodeUrl=wx_service_baseurl + "?appid=" + appid + "&redirect_user_uri=" + encodeURIComponent(redirect_user_uri) + "&state=" + encodeURIComponent(state) + "&e=y"
-// 所以现在最终的链接值 为  "https://m.testalpha.wosai.com/wxservice/check.do?appid=2017891823646&redirect_user_uri=https%3A%2F%2Feinvoice.testalpha.shouqianba.com%2Fxxxx%2Fxxxx%2Fh5&state=p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D28910391282321983%20cace5e52caf7e7b2ecbcc6d78c1260b8&e=y"
+// 所以现在最终的链接值 为  "https://m.testalpha.wosai.com/wxservice/check.do?appid=2017891823646&redirect_user_uri=https%3A%2F%2Feinvoice.testalpha.shouqianba.com%2Fxxxx%2Fxxxx%2Fh5&state=p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D201709280028392%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D28910391282321983%20b09478cbf8239237942205eaa56a7d14&e=y"
 
 ```
 
