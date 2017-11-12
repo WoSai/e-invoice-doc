@@ -138,7 +138,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
             "unit":"台",
             "tax_rate":"0.17",
             "quantity": "10",
-            "zero_rate_flag": "1",
+            "zero_rate_flag": "0",
             "row_type":"0",
             "specification":"X100"
         }
