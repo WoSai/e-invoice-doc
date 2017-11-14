@@ -161,18 +161,17 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 
 ```javascript
 {
-    "result_code": "200",
     "biz_response": {
-        "result_code": "INVOICE_SUCCESS",
         "data": {
-            "task_status": "INVOICE_APPLY_SUBMIT_SUCCESS",
-            "status":"SUCCESS",
-            "client_sn":"22000000012",
+            "client_sn": "22000000012",
             "client_task_sn": "22000009989",
-            "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "reflect":reflect_struct
-        }
-    }
+            "status": "SUCCESS",
+            "task_sn": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "task_status": "CREATED"
+        },
+        "result_code": "INVOICE_SUCCESS"
+    },
+    "result_code": "200"
 }
 
 ```
@@ -275,9 +274,9 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 |invoice_type|开票类型|string(10)|Y|0:BLUE-蓝票(开蓝票), 1:RED-红票(红冲)|
 |device_no|税控设备编号(新版电子发票有)|string|N|sw1231|
 |file_path|发票PDF的下载地址(仅在单个查询接口上显示，批量查询不显示)|string|N|demo|
-|file_data_type|文件类型(pdf,jpg,png)|string|Y|jpg|
-|ciphertext|发票密文，密码区的字符串|string|Y|demosdffsd-32432|
-|anti_fake_code|防伪码|string|Y|CF6B2F6168420008|
+|file_date_type|文件类型(pdf,jpg,png)|string|Y|jpg|
+|ciphertext|发票密文，密码区的字符串|string|N|demosdffsd-32432|
+|anti_fake_code|防伪码|string|N|CF6B2F6168420008|
 |qr_code|二维码|string|Y|demo|
 |payer_register_no|购买方纳税人识别号|varchar(20)|N| |
 |payer_name|发票抬头名称|string(100)|N|开票成功必传|
