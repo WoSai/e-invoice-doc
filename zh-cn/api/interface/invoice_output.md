@@ -290,7 +290,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 |payer_mobile|购买方电话(兼容旧接入系统，与payer_phone值相同)|string(16)|N| |
 |reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }|
 
-- 回调参数示例：
+- 回调参数示例： 
 
 ```javascript
 {
