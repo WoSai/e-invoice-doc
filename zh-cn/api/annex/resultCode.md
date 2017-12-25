@@ -19,6 +19,7 @@ ERROR: 本次业务执行结果未知
 <font color="red">INVOICE_IN_PROGRESS</font> | 开票中  | 用户方接口接受开票结果的主动推送，或者发起被动查询查看开票结果
 <font color="red">SUCCESS|	操作成功,**开发者根据返回的biz_response.data.task_status属性判断当前开票任务的状态。**| 
 <font color="red">FAIL	|操作失败（不会触发流程）| 
+<font color="red">NOT_EXIST_INVOICE	|没有查到相关票据或开票信息| 
 
 ### 任务状态列表
 
@@ -27,14 +28,11 @@ biz_response.data.task_status
 取值 |含义  
 --------- | ------
 <font color="green">CREATED</font>	| <font color="red">任务已创建/开票中</font>
-<font color="green">INVOICED_BLUE_SUCCESS</font>	    | <font color="red">开票成功</font>
-<font color="green">INVOICED_RED_SUCCESS</font>    | <font color="red">红冲成功</font>
 
 **开发者根据返回的biz_response.data.task_status属性判断当前开票任务的状态。**
 
 ### 哪些状态是任务最终状态
-- INVOICED_BLUE_SUCCESS
-- INVOICED_RED_SUCCESS
+- 开票任务查询接口(query) 返回的 SUCCESS  
 
 
 ### 流水状态列表

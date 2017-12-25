@@ -282,7 +282,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 |file_date_type|文件类型(pdf,jpg,png)|string|Y|jpg|
 |ciphertext|发票密文，密码区的字符串|string|N|demosdffsd-32432|
 |anti_fake_code|防伪码|string|N|CF6B2F6168420008|
-|qr_code|二维码|string|Y|demo|
+|qr_code|二维码|string|N|demo|
 |payer_register_no|购买方纳税人识别号|varchar(20)|N| |
 |payer_name|发票抬头名称|string(100)|N|开票成功必传|
 |user_phone|消费者手机号|string(20)|Y| |
