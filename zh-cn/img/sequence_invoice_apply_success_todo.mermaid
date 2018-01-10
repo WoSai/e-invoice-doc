@@ -22,8 +22,12 @@ sequenceDiagram
     uinvoice_backend_schedule-->>-rabbitmq:ack
     uinvoice_backend_schedule->>+alipay_invoice:apply
     alipay_invoice-->>-uinvoice_backend_schedule:success(applyId)
-    uinvoice_backend_schedule->>+rabbitmq:pub(invoice/query_task)
-    rabbitmq-->>-uinvoice_backend_schedule:ack
+    alipay_invoice->>+uinvoice_openapi:callabck_invoice_success(applyId,...)
+    uinvoice_openapi->>+uinvoice_gateway:callabck_invoice_success(applyId,...)
+    uinvoice_gateway->>+rabbitmq:pub(invoice/query_task(applyId))
+    rabbitmq-->>-uinvoice_gateway:ack
+    uinvoice_gateway-->>-uinvoice_openapi:invoke_success()
+    uinvoice_openapi-->>-alipay_invoice:invoke_success()
     rabbitmq->>+uinvoice_backend_schedule:sub(invoice/query_task)
     uinvoice_backend_schedule-->>-rabbitmq:ack
     uinvoice_backend_schedule->>+alipay_invoice:query(applyId) 至多调用10次
