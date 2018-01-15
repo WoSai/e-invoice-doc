@@ -9,7 +9,7 @@ application/json
 ### 请求参数
 字段名 | 类型 | 是否必填 | 说明
 ------ | ----- | -----| -----
-app_id | string | Y | app id，从服务商平台获取
+app_id | string | Y | app id，从收钱吧服务商平台获取
 code | string | Y | 激活码内容
 device_id | string(128) | Y | 设备唯一身份ID
 client_sn | string(50) | N | 第三方终端号，必须保证在app id下唯一

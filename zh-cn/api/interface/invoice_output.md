@@ -58,7 +58,7 @@
 
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
-user_from|用户来自何处|string|Y|0: 未知; 1: 支付宝; 2: 微信
+user_from|发起开票请求操作的用户来源|string|Y|0: 未知; 1: 支付宝; 2: 微信
 user_uid|对应平台的 user-openId(用户唯一标识)|string|Y|当 user_from 识别为 "支付宝"、"微信"时, 这个值是 对应平台的 user-openId(用户唯一标识), 否则应设置为 终端号(terminal_sn)
 terminal_sn|终端号|string|Y|
 recommandation_info|推荐信息 由商家给出, 用于开票成功后给客户推送邮件时的特殊附加 url; 如果展示url, 使用格式如: <br/>``` [关注我们的官网](http://xxxx.xxx.xxx) ``` <br/>如果是要直接展示二维码, 使用格式如: <br/>``` [#qrcode](http://xxxx/xxx/xxx) ```|string(150)|N|
@@ -71,18 +71,18 @@ invoice_type|开票类型|string(10)|Y|0:BLUE-蓝票(开蓝票), 1:RED-红票(�
 apply_from|申请发起方角色类型|string|N|0: PAYEE 和 1: PAYER, 默认值是 1: "PAYER"
 payer_register_no|付款方税务纳税人识别号。对企业开具电子发票时必填。目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|string(20)|N|2015020123123
 invoice_amount|开票金额； 当开红票时，该字段为负数, 单位为分 |string|Y|117000
-invoice_memo|发票备注，有些省市会把此信息打印到PDF中|string(200)|N|电子发票测试
+invoice_memo|发票备注，有些省市会把此信息打印到PDF中,会显示在票张的右下角备注栏|string(200)|N|电子发票测试
 invoice_time|开票日期, 格式"YYYY-MM-DD HH:SS:MM"|Date|Y|2015-05-21 12:00:00
 normal_invoice_code|原发票代码(开红票时传入)|string(12)|N|111100000000
 normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
-payer_address|消费者地址|string(100)|N|浙江省杭州市余杭区文一西路xxx号
-payer_bankaccount|付款方开票开户银行及账号|string(100)|N|123412341234
-payer_email|消费者电子邮箱|string|Y|mytest@xxx.com
-payer_name|付款方名称, 对应发票抬头|string(100)|Y|付款方名称, 对应发票抬头
+payer_address|购买方地址，若填写则显示在票张左上的购买方地址栏|string(100)|N|浙江省杭州市余杭区文一西路xxx号
+payer_bankaccount|购买方开票开户银行及账号，若填写则显示在票张左上的开户行及账号栏|string(100)|N|中国人民银行 123412341234
+payer_email|消费者电子邮箱，用于接受电子发票票张归集邮件|string|Y|mytest@xxx.com
+payer_name|购买方名称, 对应发票抬头，显示在票张左上的购买方名称栏|string(100)|Y|付款方名称, 对应发票抬头
 user_phone|消费者联系电话|string(16)|Y|18234561212
-payer_phone|付款方联系电话|string(16)|N|18234561212 或者 0512-55553333
-sum_price|合计金额，不含税金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000
-sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000
+payer_phone|购买方联系电话，若填写则显示在票张左上的购买方电话栏|string(16)|N|18234561212 或者 0512-55553333
+[//]: <> (sum_price|合计金额，不含税金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000)
+[//]: <> (sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000)
 invoice_items|开票商品明细信息|[]|Y|参考开票明细信息
 reflect|反射参数|string(64)|N|任何调用者希望原样返回的信息，可以用于关联商户ERP系统的订单或记录附加订单内容, 比如 { "tips": "200" }
 payway|支付通道唯一标识|string(20)|N|1:支付宝 3:微信 4:百度钱包 5:京东钱包 6:qq钱包 100:现金 101:银联卡 110:银行卡; 如果经由多种支付完成，则可用英文 "," 进行连接， 比如： 1,100
@@ -94,15 +94,15 @@ payer_uid|开票用户 唯一标识(id), 如：支付宝id,微信open_id等|stri
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
 item_no|商品税收编码|string|N|123456
-item_name|发票项目名称（或商品名称）|string|Y|电视机
-price|单价，单位为分,格式：10000。新版电子发票，折扣行此参数不能传，非折扣行必传；红票、蓝票都为正数|string|N|10000
+item_name|发票项目名称，即商品名称，将显示在票张货物或应税劳务、服务名称栏|string|Y|电视机
+[//]: <> (price|商品不含税单价，单位为分,格式：10000。新版电子发票，折扣行此参数不能传，非折扣行必传；红票、蓝票都为正数|string|N|10000)
 quantity|数量, 默认为1。新版电子发票，折扣行此参数不能传，非折扣行必传； 当开红票时，该字段需为负数|string|N|10
 row_type|发票行性质。0表示正常行，1表示折扣行，2表示被折扣行。比如充电器单价100元，折扣10元，则明细为2行，充电器行性质为2，折扣行性质为1。如果充电器没有折扣，则值应为0|string|Y|0
-specification|规格型号,可选|string|N|X100
-sum_price|总价, 不含税金额，格式：100.00； 当开红票时，该字段为负数|string|Y|100000
-tax|税额； 当开红票时，该字段为负数, 单位是分|string|Y|17000
+specification|规格型号,若填写将显示在票张规格型号栏|string|N|X100
+[//]: <> (sum_price|总价, 不含税金额，格式：100.00； 当开红票时，该字段为负数|string|Y|100000)
+[//]: <> (tax|税额； 当开红票时，该字段为负数, 单位是分|string|Y|17000)
 tax_rate|税率。税率只能为0或0.03或0.04或0.06或0.11或0.13或0.17|string|Y|0.17
-unit|单位。新版电子发票，折扣行不能传，非折扣行必传|string|N|台
+unit|单位，将显示在票张单位栏；。新版电子发票，折扣行不能传，非折扣行必传|string|N|台
 amount|价税合计。(等于sumPrice和tax之和) 当开红票时，该字段为负数;单位是分|string|Y|117000
 zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|string|N|1
 
@@ -120,8 +120,6 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
     "client_time": "1488262165000",
     "bussiness_type":"0",
     "invoice_amount": "117000",
-    "sum_price": "100000",
-    "sum_tax": "17000",
     "invoice_time": "2017-01-12 12:00:00",
     "invoice_type": "0",
     "notify_url":"https://xxx.xxx.xxx/xxx/xxx/xxx",
@@ -134,9 +132,6 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
         {
             "item_no": "1001",
             "item_name": "电视机",
-            "price":"10000",
-            "sum_price":"100000",
-            "tax":"17000",
             "amount": "117000",
             "unit":"台",
             "tax_rate":"0.17",
@@ -226,7 +221,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 {
     "result_code": "200",
     "biz_response": {
-        "result_code": "INVOICE_SUCCESS",
+        "result_code": "SUCCESS",
         "data": {
             "terminal_sn":"2200000001",
             "task_sn":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -283,7 +278,8 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 |ciphertext|发票密文，密码区的字符串|string|N|demosdffsd-32432|
 |anti_fake_code|防伪码|string|N|CF6B2F6168420008|
 |qr_code|二维码|string|N|demo|
-|payer_register_no|购买方纳税人识别号|varchar(20)|N| |
+|payer_register_no|购买方税务纳税人识别号。对企业开具电子发票时必填。
+目前北京地区暂未开放对企业开具电子发票，若北京地区放开后，对于向企业开具的情况，付款方税务登记证号和名称也不能为空,注：根据国家税务总局公告2017年第16号公告，2017年7月1日起，增值税普通发票必须填写纳税人识别号，否则无法作为企业内部报销凭证。|varchar(20)|N|支持15、17、18、20位数字及字母，字母需小写。|
 |payer_name|发票抬头名称|string(100)|N|开票成功必传|
 |user_phone|消费者手机号|string(20)|Y| |
 |payer_phone|购买方电话|string(16)|N| |
