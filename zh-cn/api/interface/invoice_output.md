@@ -81,9 +81,12 @@ invoice_time|开票日期, 格式"YYYY-MM-DD HH:SS:MM"|Date|Y|2015-05-21 12:00:0
 normal_invoice_code|原发票代码(开红票时传入)|string(12)|N|111100000000
 normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
 payer_address|购买方地址，若填写则显示在票张左上的购买方地址栏|string(100)|N|浙江省杭州市余杭区文一西路xxx号
-payer_bankaccount|购买方开票开户银行及账号，若填写则显示在票张左上的开户行及账号栏|string(100)|N|中国人民银行 123412341234
+payer_bankaccount|购买方开票开户银行账号，若填写则显示在票张左上的开户行及账号栏|string(100)|N|123412341234
+payer_bank_name|付款方开票开户银行|String(100)|N|上海银行
 payer_email|消费者电子邮箱，用于接受电子发票票张归集邮件|string|Y|mytest@xxx.com
 payer_name|购买方名称, 对应发票抬头，显示在票张左上的购买方名称栏|string(100)|Y|付款方名称, 对应发票抬头
+sum_tax|合计税额 当开红票时，该字段为负数,单位为分|string|Y|17000
+sum_price|合计金额，不含税金额(新版中为必传) 当开红票时，该字段为负数,单位为分|string|Y|100000)
 user_phone|消费者联系电话|string(16)|Y|18234561212
 payer_phone|购买方联系电话，若填写则显示在票张左上的购买方电话栏|string(16)|N|18234561212 或者 0512-55553333
 invoice_items|开票商品明细信息|[]|Y|参考开票明细信息
@@ -108,6 +111,9 @@ quantity|数量, 默认为1。新版电子发票，折扣行此参数不能传�
 row_type|发票行性质。0表示正常行，1表示折扣行，2表示被折扣行。比如充电器单价100元，折扣10元，则明细为2行，充电器行性质为2，折扣行性质为1。如果充电器没有折扣，则值应为0|string|Y|0
 specification|规格型号,若填写将显示在票张规格型号栏|string|N|X100
 tax_rate|税率。税率只能为0或0.03或0.04或0.06或0.11或0.13或0.17|string|Y|0.17
+price|商品不含税单价，单位为分,格式：10000。新版电子发票，折扣行此参数不能传，非折扣行必传；红票、蓝票都为正数|string|N|10000
+sum_price|总价, 不含税金额，格式：100.00； 当开红票时，该字段为负数|string|Y|100000)
+tax|税额； 当开红票时，该字段为负数, 单位是分|string|Y|17000
 unit|单位，将显示在票张单位栏；。新版电子发票，折扣行不能传，非折扣行必传|string|N|台
 amount|价税合计。(等于sumPrice和tax之和) 当开红票时，该字段为负数;单位是分|string|Y|117000
 zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零税率，1=免税，2=不征收，3=普通零税率|string|N|1
@@ -132,7 +138,9 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
     "payer_name": "发票抬头",
     "payer_email": "user@example.com",
     "payer_phone": "0512-55553333",
-    "user_phone": "18268888888"
+    "user_phone": "18268888888",
+    "payer_bank_name":"上海银行",
+    "payer_bankaccount":"312i3292433",
     "payer_register_no": "9133010060913454XP",
     "invoice_items": [
         {
