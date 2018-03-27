@@ -143,7 +143,8 @@ normal_invoice_code|原发票代码(开红票时传入)|string(12)|N|11110000000
 normal_invoice_no|原发票号码(开红票时传入)|string(8)|N|00004349
 payee_register_no|收款方税务登记证号|string(20)|Y|20150201321123
 payer_address|消费者地址|string(100)|N|浙江省杭州市余杭区文一西路xxx号
-payer_bankaccount|付款方开票开户银行及账号|string(100)|N|123412341234
+payer_bankaccount|付款方开票开户银行账号|string(100)|N|123412341234
+payer_back_name|付款方开票开户银行|String(100)|N|上海银行
 payer_email|消费者电子邮箱|string|Y|mytest@xxx.com
 payer_name|付款方名称, 对应发票台头|string(100)|Y|付款方名称, 对应发票台头
 payer_phone|消费者联系电话|string(20)|Y|18234561212
@@ -201,6 +202,8 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
     "payer_email": "user@example.com",
     "payer_phone": "18268888888",
     "payer_register_no": "9133010060913454XP",
+    "payer_bank_name":"上海银行",
+    "payer_bankaccount":"92523123213412341234",
     "invoice_items": [
         {
             "item_no": "1001",
