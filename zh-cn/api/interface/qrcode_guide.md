@@ -35,7 +35,7 @@ cs|商户系统订单号(client_sn)|string|Y|必须在商户系统内唯一；�
 ct|商户系统订单完成时间(client_time)|int|Y|timestamp,单位毫秒
 ta|总金额(分)(total_amount)|int|Y|
 bc|brand_code 品牌编号, 填写商户于 wosai 约定的品牌映射值|string|Y|比如 0 或者 1 分别代表不同的品牌
-a|即 auth，值为 client_sn + store_sn ,client_sn为商户订单编号,store_sn为收钱吧门店编号|string|Y|client_sn + " " + store_sn
+a|即 auth，值为 client_sn + " " + store_sn ,client_sn为商户订单编号,store_sn为收钱吧门店编号|string|Y|client_sn + " " + store_sn
 
 1. 基础 state 参数构造样例，不包含 a（auth）
 
@@ -53,7 +53,7 @@ client_sn="28910391282321983"
 store_sn="7f3804007bf8408293b8ebb8157fc0fb"
 
 // md5 使用 hex_md5
-a=MD5(CONCAT(client_sn + store_sn))
+a=MD5(CONCAT(client_sn + " " + store_sn))
 // 算出来，signature 的值为 "96afbca1a158e844f75937aa891cb13b"
 ```
 
