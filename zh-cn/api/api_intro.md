@@ -4,6 +4,6 @@
 
 ##接口一览
 
-###[激活接口](api/interface/activate.md)
-###[签到接口](api/interface/checkin.md)
-###[开票相关接口](api/interface/invoice_output.md)
+###[激活接口](interface/activate.md)
+###[签到接口](interface/checkin.md)
+###[开票相关接口](interface/invoice_output.md)

@@ -2,11 +2,17 @@
 ##简介
 订单上传式H5开票方案提供了相对更为便利的开票方式，用户只需根据收钱吧文档将订单信息上传，并按照二维码生成规则打印二维码，消费者即可直接扫码开票。
 
-![](../img/order_flow.png)
+## 方案流程图
+
+![](../img/order_flow.png?raw=true)
+
+## 接入流程
+
+ > * 第一步: 商家提交商户资料，获取门店及终端信息，并选择对应开票方案
+ > * 第二部: 接入[订单同步服务](interface.md)，通过接口上传订单作为开票信息
+ > * 第三部: 根据[二维码生成规则](qrcode_guide.md)在小票或收据上打印二维码供消费者扫码开票
 
 ##接口一览
 
-###[激活接口](api/interface/activate.md)
-###[签到接口](api/interface/checkin.md)
-###[开票相关接口](api/interface/invoice_output.md)
+###[订单上传相关接口](interface.md)
     
