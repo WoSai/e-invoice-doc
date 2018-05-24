@@ -6,7 +6,7 @@
     * [4.1 接口开票方案](api/api_intro.md)
         * [4.1.1 对接流程文档](api/apiflow.md)
         * [4.1.2 签名机制](api/sign.md)
-        * [4.1.3 对接接口列表]()
+        * [4.1.3 对接接口列表](base_intro.md)
             * [4.1.3.1 激活接口](api/interface/activate.md)
             * [4.1.3.2 签到接口](api/interface/checkin.md)
             * [4.1.3.3 开票](api/interface/invoice_output.md)
