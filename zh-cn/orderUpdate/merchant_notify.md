@@ -25,10 +25,11 @@ result_code|返回状态码|string|Y|SUCCESS: 成功; ERROR: 失败
 
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
-client_sn|对应商户订单号|string|Y|
-client_time|对应商户订单时间|string|Y|
-total_amount|订单总金额|string|Y|
-status|订单开票状态|int|Y|0: 尚未开票，1: 已开蓝票，2: 已开红票
+client_sn|对应商户订单号|string|Y|-
+client_original_sn|对应商户退款前原订单号|string|Y|仅红票回调时存在
+client_time|对应商户订单时间|string|Y|-
+total_amount|订单总金额|string|Y|-
+status|订单开票状态|int|Y|1: 已开蓝票，2: 已开红票
 
  - 蓝票参数示例：
 
@@ -39,6 +40,7 @@ status|订单开票状态|int|Y|0: 尚未开票，1: 已开蓝票，2: 已开红
         "result_code":"SUCCESS",
         "order":{
             "client_sn":"351020180831",
+			"client_original_sn": "351020180830",
             "client_time":"2018-08-31 16:28:10",
             "total_amount":"192060",
             "status":1
@@ -77,23 +79,24 @@ result_code|返回状态码|string|Y|SUCCESS: 成功; ERROR: 失败
 
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
-client_sn|对应商户订单号|string|Y|
-client_time|对应商户订单时间|string|Y|
-total_amount|订单总金额|string|Y|
-status|订单开票状态|int|Y|0: 尚未开票，1: 已开蓝票，2: 已开红票
+client_sn|对应商户订单号|string|Y|-
+client_original_sn|对应商户退款前原订单号|string|Y|仅红票回调时存在
+client_time|对应商户订单时间|string|Y|-
+total_amount|订单总金额|string|Y|-
+status|订单开票状态|int|Y|1: 已开蓝票，2: 已开红票
 
    - 开票结果信息(order 中的 invoice)
 
 
 名称|含义|类型|必填|备注
 ----|:---|:---|:--:|--------
-task_sn|收钱吧开票任务号|string|Y|
-channel_task_sn|开票渠道任务号|string|Y|
-invoice_time|开票时间|string|Y|
-invoice_code|发票代码|string|Y|
-invoice_no|发票号码|string|Y|
-payee_name|销方名称|string|Y|
-invoice_amount|价税合计|string|Y|
+task_sn|收钱吧开票任务号|string|Y|-
+channel_task_sn|开票渠道任务号|string|Y|-
+invoice_time|开票时间|string|Y|-
+invoice_code|发票代码|string|Y|-
+invoice_no|发票号码|string|Y|-
+payee_name|销方名称|string|Y|-
+invoice_amount|价税合计|string|Y|-
 pdf_url|票面URL|string|Y|电子发票的可访问的图片URL地址
 
  - 蓝票参数示例：
@@ -105,6 +108,7 @@ pdf_url|票面URL|string|Y|电子发票的可访问的图片URL地址
         "result_code":"SUCCESS",
         "order":{
             "client_sn":"351020180831",
+			"client_original_sn": "351020180830",
             "client_time":"2018-08-31 16:28:10",
             "total_amount":"192060",
             "status":1,

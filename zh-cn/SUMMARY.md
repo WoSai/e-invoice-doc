@@ -19,4 +19,5 @@
         * [2.2.2 验签机制](orderUpdate/sign.md)
         * [2.2.3 订单上传接口列表](orderUpdate/interface.md)
         * [2.2.4 二维码生成规则](orderUpdate/qrcode_guide.md)
+        * [2.2.5 商户订单回调](orderUpdate/merchant_notify.md)
     * [2.3 A920智能终端方案](a920/a920_intro.md)
