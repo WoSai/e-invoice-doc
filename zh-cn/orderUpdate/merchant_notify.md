@@ -12,7 +12,7 @@
   ```
 
 ### 1. 订单状态回调接口(web hook)规范, (被回调的接口由商户实现并提供)
- - 接口地址：{user_callback_api_domain}/interface
+ - 接口地址：{user_callback_api_domain}
  - 访问方式：post
  - 参数格式：application/json
  - 参数说明：
@@ -32,6 +32,22 @@ total_amount|订单总金额|string|Y|-
 status|订单开票状态|int|Y|1: 已开蓝票，2: 已开红票
 
  - 蓝票参数示例：
+
+```json
+{
+    "result_code":"200",
+    "biz_response":{
+        "result_code":"SUCCESS",
+        "order":{
+            "client_sn":"351020180831",
+            "client_time":"2018-08-31 16:28:10",
+            "total_amount":"192060",
+            "status":1
+        }
+    }
+}
+```
+ - 红票参数示例：
 
 ```json
 {
@@ -66,7 +82,7 @@ status|订单开票状态|int|Y|1: 已开蓝票，2: 已开红票
 ```
 
 ### 2. 开票结果信息回调接口(web hook)规范, (被回调的接口由商户实现并提供)
- - 接口地址：{user_callback_api_domain}/interface
+ - 接口地址：{user_callback_api_domain}
  - 访问方式：post
  - 参数格式：application/json
  - 参数说明：
@@ -108,6 +124,32 @@ pdf_url|票面URL|string|Y|电子发票的可访问的图片URL地址
         "result_code":"SUCCESS",
         "order":{
             "client_sn":"351020180831",
+            "client_time":"2018-08-31 16:28:10",
+            "total_amount":"192060",
+            "status":1,
+            "invoice":{
+                "task_sn":"10113259247332270",
+                "channel_task_sn":"2018090700152001470000011434",
+                "invoice_time":"2018-08-31 21:45:23",
+                "invoice_code":"982365656091",
+                "invoice_no":"39174215",
+                "payee_name":"上海喔噻互联网科技有限公司",
+                "invoice_amount":"192060",
+                "pdf_url":"https://images.wosaimg.com/uinvoice_tickets/prod/c613279fac5d11e8a1261781755664a9.pdf"
+            }
+        }
+    }
+}
+```
+ - 红票参数示例：
+
+```json
+{
+    "result_code":"200",
+    "biz_response":{
+        "result_code":"SUCCESS",
+        "order":{
+            "client_sn":"351020180831",
 			"client_original_sn": "351020180830",
             "client_time":"2018-08-31 16:28:10",
             "total_amount":"192060",
@@ -126,6 +168,8 @@ pdf_url|票面URL|string|Y|电子发票的可访问的图片URL地址
     }
 }
 ```
+
+
 
 - 回调返回说明：
 
