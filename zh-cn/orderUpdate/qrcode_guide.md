@@ -1,10 +1,13 @@
 ### 发票二维码生成方式 （该规范有用户自己实现，为了对应离线二维码打印）
 二维码生成规范, 用来根据给定的规则, 生成包含URL信息的二维码
 
+正式环境的接口域名：http://uinvoice-ms-common-backend.shouqianba.com
+沙箱环境的接口域名：http://uinvoice-merchant-support-common.test.shouqianba.com
+
  - 规范
 
  ```
- {wx_service_baseurl}?appid={appid}&redirect_user_uri={encodeURIComponent(redirect_user_uri)}&state={encodeURIComponent(state)}&e=y
+ {api_domain}/redirect?state={encodeURIComponent(state)}
  ```
 
  - 为什么需要 encodeURIComponent 操作？
@@ -17,13 +20,6 @@
  其中 ECMA 定义的 encdoeURIComponent 实现范式文档位于 [文档](https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3) 当读完ECMA文档的15.1.3后，就能释然
  
  - 参数说明:
-
-名称|含义|类型|必填|备注
-----|:---|:---|:--:|--------
-wx_service_baseurl|微信授权服务地址|string(80)|Y|微信服务地址，由收钱吧给出
-appid|微信授权使用的appid|string|Y|由收钱吧给出
-redirect_user_uri|应用服务 url（比如 H5页面地址）|string(300)|Y|用户自己的支撑服务地址例如 https://www.anycompany.com/invoice/preapply/h5, 字符长度不超过300，如果由收钱吧代为开发，则此项由收钱吧给出
-
 
  - state 参数说明:
 
@@ -41,7 +37,7 @@ a|即 auth，值为 client_sn + " " + store_sn ,client_sn为商户订单编号,s
 
 ```javascript
 // 基础 state 参数构造样例， 转义前
-baseStateParameter="p=1,100|ts=10000058909032923|cs=201709280028392|ct=1506484936867|ta=10000|bc=0"
+baseStateParameter="p=1|ts=100010570005554188|cs=28910391282321983|ct=1541975753000|ta=26000|bc=2c896964-545b-11e8-a47c-7d1f5d212442"
 ```
 
 2. 构造 a(即 auth) 样例
@@ -62,27 +58,18 @@ a=MD5(CONCAT(client_sn + " " + store_sn))
 ```javascript
 // 完整的 state 参数值， 转义前
 state=baseStateParameter + "|" + "a=" + a
-// 算出来， state 的值是 "p=1,100|ts=10000058909032923|cs=28910391282321983|ct=1506484936867|ta=10000|bc=0|a=96afbca1a158e844f75937aa891cb13b"
+// 算出来， state 的值是 "p=1|ts=100010570005554188|cs=28910391282321983|ct=1541975753000|ta=26000|bc=2c896964-545b-11e8-a47c-7d1f5d212442|a=96afbca1a158e844f75937aa891cb13b"
 
 // 使用 encodeURIComponent 编码后的的参数为 
 encodedState=encodeURIComponent(state)
-// 算出来, encodedState 的值是 "p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D28910391282321983%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D96afbca1a158e844f75937aa891cb13b"
+// 算出来, encodedState 的值是 "p%3d1%7cts%3d100010570005554188%7ccs%3d28910391282321983%7cct%3d1541975753000%7cta%3d26000%7cbc%3d2c896964-545b-11e8-a47c-7d1f5d212442%7ca%3d96afbca1a158e844f75937aa891cb13b"
 ```
 
 4. 最终生成的二维码的样例 
 
 ```javascript
-// 假设 wx_service_baseurl 的值是 "https://m.testalpha.wosai.com/wxservice/check.do"
-wx_service_baseurl="https://m.testalpha.wosai.com/wxservice/check.do"
-// 假设 appid 为 "2017891823646"
-appid="2017891823646"
-// 假设 redirect_user_uri 为 "https://einvoice.testalpha.shouqianba.com/xxxx/xxxx/h5"
-redirect_user_uri="https://einvoice.testalpha.shouqianba.com/xxxx/xxxx/h5"
-
 // 最终的二维码的 url 内容为
-//  {wx_service_baseurl}?appid={appid}&redirect_user_uri={encodeURIComponent(redirect_user_uri)}&state={encodeURIComponent(state)}&e=y
-qrcodeUrl=wx_service_baseurl + "?appid=" + appid + "&redirect_user_uri=" + encodeURIComponent(redirect_user_uri) + "&state=" + encodeURIComponent(state) + "&e=y"
-// 所以现在最终的链接值 为  "https://m.testalpha.wosai.com/wxservice/check.do?appid=2017891823646&redirect_user_uri=https%3A%2F%2Feinvoice.testalpha.shouqianba.com%2Fxxxx%2Fxxxx%2Fh5&state=p%3D1%2C100%7Cts%3D10000058909032923%7Ccs%3D28910391282321983%7Cct%3D1506484936867%7Cta%3D10000%7Cbc%3D0%7Ca%3D96afbca1a158e844f75937aa891cb13b&e=y"
+http://uinvoice-ms-common-backend.shouqianba.com/redirect?state=p%3d1%7cts%3d100010570005554188%7ccs%3d28910391282321983%7cct%3d1541975753000%7cta%3d26000%7cbc%3d2c896964-545b-11e8-a47c-7d1f5d212442%7ca%3d96afbca1a158e844f75937aa891cb13b
 
 ```
 
