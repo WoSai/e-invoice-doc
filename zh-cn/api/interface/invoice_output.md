@@ -54,6 +54,7 @@
 ### 开票接口
  - 接口地址：{api_domain}/api/invoice/apply/v2
  - 访问方式：post
+ - 签名校验：参照2.1.4
  - 参数说明：
 
 <div style="display:none;">
@@ -191,6 +192,7 @@ zero_rate_flag|0税率标识，只有税率为0的情况才有值，0=出口零�
 ### 开票结果查询接口
  - 接口地址：{api_domain}/api/invoice/query/v2
  - 访问方式：post
+ - 签名校验：参照2.1.4
  - 参数说明：
 
 |名称|含义|类型|必填|备注|

@@ -1,4 +1,6 @@
 # 激活
+<font color="red">**注：当前版本接口开票暂不需要激活签到，只需询问收钱吧获取终端号（terminal_sn）和（terminal_key），根据签名机制，使用参数签名。**</font>
+
 激活接口用于获取交易接口签名需要的参数（终端号和终端密钥）。激活接口需要使用服务商的密钥签名。签名方法参考[签名机制文档](https://doc.shouqianba.com/invoice/zh-cn/api/sign.html)。
 
 	请使用服务商序列号（vendor_sn）作为签名人序列号，服务商密钥（vendor_key）作为签名密钥。
